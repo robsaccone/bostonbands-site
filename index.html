@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BostonBands — Wicked Music. Wicked Local. (1996–2026)</title>
+<meta name="description" content="The archive of Boston's largest local music community. Nearly 30 years of bands, venues, and the music we loved.">
+<meta property="og:title" content="BostonBands.com — 1996–2026">
+<meta property="og:description" content="Nearly 30 years of Boston's local music scene, preserved.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+  --black: #050505;
+  --surface-1: #0a0a0a;
+  --surface-2: #111111;
+  --surface-3: #1a1a1a;
+  --surface-4: #222222;
+  --text-dim: #777777;
+  --text-muted: #999999;
+  --text-body: #c0c0c0;
+  --text-bright: #e8e8e8;
+  --white: #f5f5f0;
+  --amber: #d4a03a;
+  --amber-glow: #e8b84a;
+  --amber-dim: #8a6a2a;
+  --blue: #0972a5;
+  --blue-bright: #1a9fd4;
+  --red-dim: #6b2020;
+  --font-display: 'Archivo Black', sans-serif;
+  --font-condensed: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --parallax-y: 0;
+  --scroll-progress: 0;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--surface-4) var(--black);
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--text-body);
+  background: var(--black);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+a { color: var(--amber); text-decoration: none; transition: color 0.3s; }
+a:hover { color: var(--amber-glow); }
+
+/* ============================================
+   NOISE TEXTURE OVERLAY
+   ============================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ============================================
+   SCROLL REVEAL
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ============================================
+   SCROLL PROGRESS BAR
+   ============================================ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--amber), var(--amber-glow), var(--blue-bright));
+  width: calc(var(--scroll-progress) * 100%);
+  z-index: 200;
+  transform-origin: left;
+  transition: none;
+}
+
+/* ============================================
+   PARALLAX
+   ============================================ */
+.parallax-layer {
+  will-change: transform;
+}
+
+/* ============================================
+   NUMBER COUNTER ANIMATION
+   ============================================ */
+.number-value {
+  --count-progress: 0;
+}
+.number-value.counting {
+  animation: none;
+}
+
+/* ============================================
+   HIGHLIGHT CARD SCROLL TILT
+   ============================================ */
+.highlight-card {
+  will-change: transform;
+  transition: transform 0.7s var(--ease-out-expo), box-shadow 0.5s;
+}
+.highlight-card:hover {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,160,58,0.05);
+}
+
+/* ============================================
+   TRACK ITEMS STAGGER
+   ============================================ */
+.track {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo), background 0.3s;
+}
+.track.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================================
+   GALLERY SCALE-ON-SCROLL
+   ============================================ */
+.gallery-item {
+  will-change: transform;
+}
+
+/* ============================================
+   SECTION HEADING SLIDE
+   ============================================ */
+.section-heading {
+  overflow: hidden;
+}
+.section-heading .line {
+  display: block;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+.section-heading .line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-heading .line:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0) 100%);
+  transition: background 0.4s;
+}
+nav.scrolled {
+  background: rgba(5,5,5,0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(212,160,58,0.08);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+}
+.nav-logo-img {
+  height: 48px;
+  width: auto;
+  opacity: 0.92;
+  transition: opacity 0.3s;
+  filter: invert(1) hue-rotate(180deg) brightness(1) saturate(0.9);
+}
+.nav-logo:hover .nav-logo-img {
+  opacity: 1;
+  filter: invert(1) hue-rotate(180deg) brightness(1) saturate(1);
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.nav-links a {
+  color: var(--text-muted);
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--amber);
+  transition: width 0.3s var(--ease-out-expo);
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+
+@media (max-width: 640px) {
+  nav { padding: 1rem 1.25rem; }
+  .nav-links { gap: 1.25rem; font-size: 0.75rem; }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 40%, rgba(212,160,58,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(9,114,165,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 80% 20%, rgba(107,32,32,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, var(--black));
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+}
+
+.hero-era {
+  font-family: var(--font-condensed);
+  font-weight: 400;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--amber-dim);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeSlideDown 1s 0.3s var(--ease-out-expo) forwards;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  line-height: 0.9;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  position: relative;
+  opacity: 0;
+  animation: fadeScaleIn 1.2s 0.5s var(--ease-out-expo) forwards;
+}
+.hero-title .accent {
+  display: block;
+  background: linear-gradient(135deg, var(--amber) 0%, var(--amber-glow) 50%, var(--amber) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-rule {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  border: none;
+  margin: 2rem auto;
+  opacity: 0;
+  animation: fadeIn 1s 1s var(--ease-out-expo) forwards;
+}
+.hero-tagline {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--amber-dim);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  animation: fadeSlideUp 1s 1.1s var(--ease-out-expo) forwards;
+}
+.hero-tagline em {
+  color: var(--text-bright);
+  font-style: italic;
+}
+.hero-scroll-cue {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 0;
+  animation: fadeIn 1s 2s var(--ease-out-expo) forwards;
+}
+.hero-scroll-cue span {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--amber-dim), transparent);
+  margin: 0 auto;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeScaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 0.8; transform: scaleY(1.3); }
+}
+
+/* ============================================
+   SECTIONS SHARED
+   ============================================ */
+.section {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-label {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--amber);
+  margin-bottom: 1rem;
+}
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+.section-divider {
+  width: 50px;
+  height: 2px;
+  background: var(--amber);
+  border: none;
+  margin-bottom: 2rem;
+}
+
+/* ============================================
+   THE STORY
+   ============================================ */
+.story {
+  position: relative;
+}
+.story::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--surface-4));
+}
+.story-content {
+  max-width: 680px;
+  padding-top: 2rem;
+}
+.story-content p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: var(--text-body);
+}
+.story-content p:first-of-type::first-line {
+  color: var(--text-bright);
+  font-weight: 400;
+}
+.story-content .highlight {
+  color: var(--amber);
+  font-weight: 400;
+}
+
+/* ============================================
+   BY THE NUMBERS
+   ============================================ */
+.numbers-section {
+  background: var(--surface-1);
+  border-top: 1px solid var(--surface-3);
+  border-bottom: 1px solid var(--surface-3);
+}
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+.number-item {
+  padding: 2rem 1rem;
+}
+.number-value {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(180deg, var(--white) 30%, var(--text-dim));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.number-label {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--amber-dim);
+}
+
+@media (max-width: 640px) {
+  .numbers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* ============================================
+   HIGHLIGHTS
+   ============================================ */
+.highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.highlight-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--surface-2);
+}
+.highlight-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-out-expo), filter 0.7s;
+  filter: saturate(0.3) brightness(0.7);
+}
+.highlight-card:hover img {
+  transform: scale(1.06);
+  filter: saturate(0.6) brightness(0.85);
+}
+.highlight-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(5,5,5,0.95) 0%,
+    rgba(5,5,5,0.4) 40%,
+    transparent 70%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+}
+.highlight-card-type {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  margin-bottom: 0.3rem;
+}
+.highlight-card-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+.highlight-card-detail {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+  font-weight: 300;
+}
+
+@media (max-width: 900px) {
+  .highlights-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .highlights-grid { grid-template-columns: 1fr; max-width: 360px; margin-left: auto; margin-right: auto; }
+}
+
+/* ============================================
+   MUSIC / RADIO
+   ============================================ */
+.music-section {
+  background: var(--surface-1);
+  border-top: 1px solid var(--surface-3);
+  border-bottom: 1px solid var(--surface-3);
+  position: relative;
+  overflow: hidden;
+}
+.music-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,160,58,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+.music-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.music-intro p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+  color: var(--text-body);
+}
+.tracklist {
+  list-style: none;
+}
+.track {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--surface-3);
+  transition: background 0.3s;
+  cursor: pointer;
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 2px;
+}
+.track:hover {
+  background: var(--surface-2);
+}
+.track-num {
+  font-family: var(--font-condensed);
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+.track:hover .track-num {
+  color: var(--amber);
+}
+.track-play {
+  display: none;
+  color: var(--amber);
+  font-size: 0.75rem;
+  text-align: center;
+}
+.track:hover .track-num { display: none; }
+.track:hover .track-play { display: block; }
+.track-info {
+  min-width: 0;
+}
+.track-title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-bright);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-artist {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+.track-duration {
+  font-family: var(--font-condensed);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .music-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* ============================================
+   GALLERY
+   ============================================ */
+.gallery-mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 4px;
+  margin-top: 2rem;
+}
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out-expo), filter 0.5s;
+  filter: saturate(0.2) brightness(0.75);
+}
+.gallery-item:hover img {
+  transform: scale(1.08);
+  filter: saturate(0.5) brightness(0.9);
+}
+.gallery-item.tall { grid-row: span 2; }
+.gallery-item.wide { grid-column: span 2; }
+
+@media (max-width: 768px) {
+  .gallery-mosaic {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+  }
+  .gallery-item.wide { grid-column: span 1; }
+}
+
+/* ============================================
+   CLOSING / CTA
+   ============================================ */
+.closing {
+  text-align: center;
+  padding: 8rem 2rem;
+  position: relative;
+}
+.closing::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--surface-4));
+}
+.closing-text {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.closing-text strong {
+  color: var(--text-bright);
+  font-weight: 400;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  border-top: 1px solid var(--surface-3);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+.footer-logo span { color: var(--amber-dim); }
+.footer-meta {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 300;
+  line-height: 1.8;
+}
+.footer-meta a {
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--surface-4);
+  transition: color 0.3s, border-color 0.3s;
+}
+.footer-meta a:hover {
+  color: var(--amber);
+  border-color: var(--amber-dim);
+}
+
+/* ============================================
+   UTILITY
+   ============================================ */
+.container-wide {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<!-- ========== SCROLL PROGRESS ========== -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ========== NAVIGATION ========== -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo"><img src="bb_site_logo_white.png" alt="BostonBands" class="nav-logo-img"></a>
+  <ul class="nav-links">
+    <li><a href="#story">Story</a></li>
+    <li><a href="#highlights">Highlights</a></li>
+    <li><a href="#music">Music</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+  </ul>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="hero">
+  <div class="hero-inner" id="heroInner">
+    <div class="hero-era">1996 &ndash; 2026</div>
+    <h1 class="hero-title">
+      Boston<span class="accent">Bands</span>
+    </h1>
+    <hr class="hero-rule">
+    <p class="hero-tagline">Celebrating 30 Years of Local Music</p>
+  </div>
+  <div class="hero-scroll-cue">
+    <span></span>
+  </div>
+</section>
+
+<!-- ========== THE STORY ========== -->
+<section class="section story" id="story">
+  <div class="story-content reveal">
+    <div class="section-label">The Story</div>
+    <h2 class="section-heading"><span class="line">Nearly 30 Years of</span><span class="line">Local Music</span></h2>
+    <hr class="section-divider">
+    <p>
+      BostonBands.com was founded in <span class="highlight">1996</span> by Alex Willis with a simple mission: to connect local music fans with the bands and music they love. For nearly 30 years, we provided this service for free to Boston-area musicians, venues, and fans of live music and good times.
+    </p>
+    <p>
+      What started as a simple directory grew into the <span class="highlight">largest online community</span> for New England local music&mdash;a place where thousands of artists, venues, and fans came together around the music they loved. From basement shows in Allston to stages at the Paradise and Middle East, if it was local and it rocked, it was on BostonBands.
+    </p>
+    <p>
+      This site stands as an archive and a thank-you to everyone who was part of the scene. The bands who uploaded their first demos. The venues who kept live music alive. The fans who showed up on a Tuesday night for a band they'd never heard of. This was yours.
+    </p>
+  </div>
+</section>
+
+<!-- ========== BY THE NUMBERS ========== -->
+<section class="numbers-section" id="numbers">
+  <div class="section" style="padding-top:4rem; padding-bottom:4rem;">
+    <div class="numbers-grid">
+      <div class="number-item reveal">
+        <div class="number-value">8,000+</div>
+        <div class="number-label">Artists</div>
+      </div>
+      <div class="number-item reveal reveal-delay-1">
+        <div class="number-value">6,500+</div>
+        <div class="number-label">Venues</div>
+      </div>
+      <div class="number-item reveal reveal-delay-2">
+        <div class="number-value">30</div>
+        <div class="number-label">Years</div>
+      </div>
+      <div class="number-item reveal reveal-delay-3">
+        <div class="number-value">1,000s</div>
+        <div class="number-label">Songs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HIGHLIGHTS ========== -->
+<section class="section" id="highlights">
+  <div class="reveal">
+    <div class="section-label">From the Archive</div>
+    <h2 class="section-heading"><span class="line">Highlights</span></h2>
+    <hr class="section-divider">
+  </div>
+  <div class="highlights-grid">
+    <div class="highlight-card reveal">
+      <img src="https://picsum.photos/seed/bb-band1/400/530" alt="Placeholder band photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Artist</div>
+        <div class="highlight-card-name">The Neighbors</div>
+        <div class="highlight-card-detail">Rock &middot; Allston</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-1">
+      <img src="https://picsum.photos/seed/bb-venue1/400/530" alt="Placeholder venue photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Venue</div>
+        <div class="highlight-card-name">The Middle East</div>
+        <div class="highlight-card-detail">Cambridge, MA</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-2">
+      <img src="https://picsum.photos/seed/bb-band2/400/530" alt="Placeholder band photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Artist</div>
+        <div class="highlight-card-name">Radio Compass</div>
+        <div class="highlight-card-detail">Indie &middot; Somerville</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal">
+      <img src="https://picsum.photos/seed/bb-venue2/400/530" alt="Placeholder venue photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Venue</div>
+        <div class="highlight-card-name">Paradise Rock Club</div>
+        <div class="highlight-card-detail">Boston, MA</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-1">
+      <img src="https://picsum.photos/seed/bb-band3/400/530" alt="Placeholder band photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Artist</div>
+        <div class="highlight-card-name">Bourbon &amp; Vine</div>
+        <div class="highlight-card-detail">Blues &middot; Jamaica Plain</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-2">
+      <img src="https://picsum.photos/seed/bb-venue3/400/530" alt="Placeholder venue photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Venue</div>
+        <div class="highlight-card-name">Great Scott</div>
+        <div class="highlight-card-detail">Allston, MA</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal">
+      <img src="https://picsum.photos/seed/bb-band4/400/530" alt="Placeholder band photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Artist</div>
+        <div class="highlight-card-name">Cold Engines</div>
+        <div class="highlight-card-detail">Rock &middot; Brighton</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-1">
+      <img src="https://picsum.photos/seed/bb-band5/400/530" alt="Placeholder band photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Artist</div>
+        <div class="highlight-card-name">The Dents</div>
+        <div class="highlight-card-detail">Punk &middot; Dorchester</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-2">
+      <img src="https://picsum.photos/seed/bb-venue4/400/530" alt="Placeholder venue photo" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-type">Venue</div>
+        <div class="highlight-card-name">TT the Bear's</div>
+        <div class="highlight-card-detail">Cambridge, MA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MUSIC ========== -->
+<section class="music-section" id="music">
+  <div class="section">
+    <div class="music-layout">
+      <div class="music-intro reveal">
+        <div class="section-label">BostonBands Radio</div>
+        <h2 class="section-heading"><span class="line">The Sound</span><span class="line">of the Scene</span></h2>
+        <hr class="section-divider">
+        <p>
+          Thousands of original tracks from Boston's local music scene lived on BostonBands Radio&mdash;original recordings from artists who played every bar, club, and coffee shop in Greater Boston.
+        </p>
+        <p>
+          From punk demos recorded in Allston basements to polished studio cuts from Berklee grads, the catalog captured what made this scene special: raw, real, and unapologetically local.
+        </p>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <ul class="tracklist">
+          <li class="track">
+            <span class="track-num">1</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">Streetlight Serenade</div>
+              <div class="track-artist">The Neighbors</div>
+            </div>
+            <span class="track-duration">3:42</span>
+          </li>
+          <li class="track">
+            <span class="track-num">2</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">Commonwealth Ave</div>
+              <div class="track-artist">Radio Compass</div>
+            </div>
+            <span class="track-duration">4:17</span>
+          </li>
+          <li class="track">
+            <span class="track-num">3</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">Last Call at the Rat</div>
+              <div class="track-artist">Bourbon &amp; Vine</div>
+            </div>
+            <span class="track-duration">5:01</span>
+          </li>
+          <li class="track">
+            <span class="track-num">4</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">Fenway Ghosts</div>
+              <div class="track-artist">Cold Engines</div>
+            </div>
+            <span class="track-duration">3:58</span>
+          </li>
+          <li class="track">
+            <span class="track-num">5</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">No Parking</div>
+              <div class="track-artist">The Dents</div>
+            </div>
+            <span class="track-duration">2:33</span>
+          </li>
+          <li class="track">
+            <span class="track-num">6</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">Red Line Blues</div>
+              <div class="track-artist">Sullivan Square</div>
+            </div>
+            <span class="track-duration">4:45</span>
+          </li>
+          <li class="track">
+            <span class="track-num">7</span>
+            <span class="track-play">&#9654;</span>
+            <div class="track-info">
+              <div class="track-title">Eastie</div>
+              <div class="track-artist">Harbor Waves</div>
+            </div>
+            <span class="track-duration">3:21</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== GALLERY ========== -->
+<section class="section" id="gallery">
+  <div class="reveal">
+    <div class="section-label">The Gallery</div>
+    <h2 class="section-heading"><span class="line">The Scene,</span><span class="line">Captured</span></h2>
+    <hr class="section-divider">
+  </div>
+  <div class="gallery-mosaic">
+    <div class="gallery-item wide reveal">
+      <img src="https://picsum.photos/seed/bb-gal1/600/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item tall reveal reveal-delay-1">
+      <img src="https://picsum.photos/seed/bb-gal2/400/600" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item reveal reveal-delay-2">
+      <img src="https://picsum.photos/seed/bb-gal3/400/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://picsum.photos/seed/bb-gal4/400/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item reveal reveal-delay-1">
+      <img src="https://picsum.photos/seed/bb-gal5/400/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item wide reveal reveal-delay-2">
+      <img src="https://picsum.photos/seed/bb-gal6/600/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://picsum.photos/seed/bb-gal7/400/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item tall reveal reveal-delay-1">
+      <img src="https://picsum.photos/seed/bb-gal8/400/600" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item reveal reveal-delay-2">
+      <img src="https://picsum.photos/seed/bb-gal9/400/400" alt="Gallery photo" loading="lazy">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://picsum.photos/seed/bb-gal10/400/400" alt="Gallery photo" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ========== CLOSING ========== -->
+<section class="closing">
+  <div class="reveal">
+    <div class="section-label">Thank You</div>
+    <h2 class="section-heading"><span class="line">Keep It</span><span class="line">Local</span></h2>
+    <hr class="section-divider" style="margin-left:auto; margin-right:auto;">
+    <p class="closing-text">
+      To every musician who uploaded a demo, every venue that booked a local act, and every fan who showed up&mdash;<strong>this was yours, and it always will be.</strong>
+    </p>
+    <p class="closing-text" style="font-size:1rem;">
+      The BostonBands archive is a work in progress. If you have photos, recordings, or memories to share, <a href="mailto:support@bostonbands.com">we'd love to hear from you</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-logo">Boston<span>Bands</span>.com &middot; 1996&ndash;2026</div>
+  <div class="footer-meta">
+    Boston, Massachusetts<br>
+    <a href="mailto:support@bostonbands.com">support@bostonbands.com</a>
+  </div>
+</footer>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+(function() {
+  'use strict';
+
+  // ── Scroll reveal via IntersectionObserver ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── Section heading line reveal ──
+  const lineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.line').forEach(line => line.classList.add('visible'));
+        lineObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.section-heading').forEach(el => lineObserver.observe(el));
+
+  // ── Track items staggered reveal ──
+  const trackObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const tracks = entry.target.querySelectorAll('.track');
+        tracks.forEach((track, i) => {
+          setTimeout(() => track.classList.add('visible'), i * 80);
+        });
+        trackObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.tracklist').forEach(el => trackObserver.observe(el));
+
+  // ── Animated number counters ──
+  function animateCounter(el, target, suffix) {
+    const duration = 1800;
+    const start = performance.now();
+    const isFloat = target % 1 !== 0;
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out-expo
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = Math.round(eased * target);
+
+      if (target >= 1000) {
+        el.textContent = current.toLocaleString() + suffix;
+      } else {
+        el.textContent = current + suffix;
+      }
+
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const text = el.textContent.trim();
+        const numMatch = text.replace(/,/g, '').match(/[\d.]+/);
+        if (numMatch) {
+          const target = parseFloat(numMatch[0]);
+          const suffix = text.replace(/[\d,.]+/, '');
+          el.textContent = '0' + suffix;
+          el.classList.add('counting');
+          setTimeout(() => animateCounter(el, target, suffix), 200);
+        }
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.number-value').forEach(el => counterObserver.observe(el));
+
+  // ── Scroll-driven effects (rAF loop) ──
+  const navbar = document.getElementById('navbar');
+  const heroInner = document.getElementById('heroInner');
+  const hero = document.getElementById('hero');
+  let ticking = false;
+
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? scrollY / docHeight : 0;
+
+    // Scroll progress bar
+    document.documentElement.style.setProperty('--scroll-progress', progress);
+
+    // Nav state
+    navbar.classList.toggle('scrolled', scrollY > 80);
+
+    // Hero parallax: content moves up and fades as you scroll
+    if (hero) {
+      const heroH = hero.offsetHeight;
+      const heroProgress = Math.min(scrollY / heroH, 1);
+      if (heroInner) {
+        heroInner.style.transform = `translateY(${scrollY * 0.35}px)`;
+        heroInner.style.opacity = 1 - heroProgress * 1.2;
+      }
+    }
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // ── Gallery items: subtle scale on scroll proximity ──
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  if (galleryItems.length && window.IntersectionObserver) {
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const ratio = entry.intersectionRatio;
+        const scale = 0.95 + (ratio * 0.05);
+        entry.target.style.transform = `scale(${scale})`;
+        entry.target.style.opacity = 0.5 + (ratio * 0.5);
+      });
+    }, { threshold: Array.from({length: 20}, (_, i) => i / 19) });
+
+    galleryItems.forEach(el => galleryObserver.observe(el));
+  }
+
+  // ── Smooth scroll for nav links ──
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Run once on load
+  onScroll();
+})();
+</script>
+
+</body>
+</html>
