@@ -438,6 +438,48 @@ nav.scrolled {
   pointer-events: none;
 }
 
+/* Boston skyline */
+.hero-skyline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 180px;
+  z-index: 0;
+  opacity: 0;
+  animation: fadeIn 2s 1.5s var(--ease-out-expo) forwards;
+  pointer-events: none;
+}
+.hero-skyline svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  animation: skylineDrift 120s linear infinite;
+}
+.hero-skyline svg:nth-child(2) {
+  left: 50%;
+}
+@keyframes skylineDrift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.hero-skyline-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: radial-gradient(ellipse 80% 100% at 50% 100%, rgba(212,160,58,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  animation: skylineGlowPulse 8s ease-in-out infinite;
+}
+@keyframes skylineGlowPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
 .hero-inner {
   position: relative;
   z-index: 1;
@@ -978,6 +1020,85 @@ footer {
     <hr class="hero-rule">
     <p class="hero-tagline">Celebrating 30 Years of Local Music</p>
   </div>
+  <!-- Boston skyline silhouette -->
+  <div class="hero-skyline">
+    <svg viewBox="0 0 1200 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="rgba(255,255,255,0.03)" d="
+        M0,180 L0,160
+        L30,160 L30,140 L35,140 L35,120 L40,120 L40,140 L50,140 L50,160
+        L80,160 L80,130 L85,130 L85,110 L90,110 L90,130 L100,130 L100,160
+        L130,160 L130,150 L140,150 L140,160
+        L160,160 L160,90 L163,90 L163,85 L166,85 L166,70 L170,68 L174,70 L174,85 L177,85 L177,90 L180,90 L180,160
+        L200,160 L200,140 L210,140 L210,120 L215,120 L215,140 L225,140 L225,160
+        L260,160 L260,45 L264,42 L268,42 L268,38 L272,38 L272,42 L276,42 L280,45 L280,160
+        L300,160 L300,130 L305,130 L305,115 L310,115 L310,130 L320,130 L320,160
+        L350,160 L350,100 L355,100 L355,55 L358,52 L362,52 L365,55 L365,100 L370,100 L370,160
+        L400,160 L400,145 L410,145 L410,135 L420,135 L420,145 L430,145 L430,160
+        L460,160 L460,80 L465,80 L465,60 L470,58 L475,60 L475,80 L480,80 L480,160
+        L510,160 L510,140 L515,140 L515,125 L520,125 L520,140 L530,140 L530,160
+        L555,160 L555,150 L560,150 L560,145 L580,145 L580,150 L585,150 L585,160
+        L610,160 L610,110 L614,108 L618,108 L618,90 L622,88 L626,90 L626,108 L630,108 L634,110 L634,160
+        L660,160 L660,130 L665,130 L665,120 L675,120 L675,130 L680,130 L680,160
+        L700,160 L700,95 L704,93 L708,93 L708,75 L710,72 L712,72 L714,75 L714,93 L718,93 L722,95 L722,160
+        L750,160 L750,140 L755,140 L755,130 L765,130 L765,140 L770,140 L770,160
+        L800,160 L800,145 L810,145 L810,155 L820,155 L820,160
+        L845,160 L845,65 L848,62 L852,62 L852,30 L855,25 L858,25 L861,30 L861,62 L865,62 L868,65 L868,160
+        L890,160 L890,135 L895,135 L895,120 L900,120 L900,135 L910,135 L910,160
+        L940,160 L940,105 L944,103 L948,100 L952,100 L956,103 L960,105 L960,160
+        L980,160 L980,140 L985,140 L985,150 L1000,150 L1000,160
+        L1030,160 L1030,85 L1034,83 L1038,80 L1038,50 L1040,45 L1042,50 L1042,80 L1046,83 L1050,85 L1050,160
+        L1080,160 L1080,130 L1085,130 L1085,140 L1095,140 L1095,160
+        L1120,160 L1120,110 L1125,108 L1130,110 L1130,160
+        L1150,160 L1150,140 L1155,140 L1155,135 L1165,135 L1165,140 L1170,140 L1170,160
+        L1200,160 L1200,180 Z
+      "/>
+      <!-- Citgo sign -->
+      <polygon fill="rgba(212,160,58,0.06)" points="555,145 570,130 585,145"/>
+      <!-- Zakim bridge cables -->
+      <line x1="170" y1="68" x2="130" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+      <line x1="170" y1="68" x2="145" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+      <line x1="170" y1="68" x2="195" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+      <line x1="170" y1="68" x2="210" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    </svg>
+    <svg viewBox="0 0 1200 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="rgba(255,255,255,0.03)" d="
+        M0,180 L0,160
+        L30,160 L30,140 L35,140 L35,120 L40,120 L40,140 L50,140 L50,160
+        L80,160 L80,130 L85,130 L85,110 L90,110 L90,130 L100,130 L100,160
+        L130,160 L130,150 L140,150 L140,160
+        L160,160 L160,90 L163,90 L163,85 L166,85 L166,70 L170,68 L174,70 L174,85 L177,85 L177,90 L180,90 L180,160
+        L200,160 L200,140 L210,140 L210,120 L215,120 L215,140 L225,140 L225,160
+        L260,160 L260,45 L264,42 L268,42 L268,38 L272,38 L272,42 L276,42 L280,45 L280,160
+        L300,160 L300,130 L305,130 L305,115 L310,115 L310,130 L320,130 L320,160
+        L350,160 L350,100 L355,100 L355,55 L358,52 L362,52 L365,55 L365,100 L370,100 L370,160
+        L400,160 L400,145 L410,145 L410,135 L420,135 L420,145 L430,145 L430,160
+        L460,160 L460,80 L465,80 L465,60 L470,58 L475,60 L475,80 L480,80 L480,160
+        L510,160 L510,140 L515,140 L515,125 L520,125 L520,140 L530,140 L530,160
+        L555,160 L555,150 L560,150 L560,145 L580,145 L580,150 L585,150 L585,160
+        L610,160 L610,110 L614,108 L618,108 L618,90 L622,88 L626,90 L626,108 L630,108 L634,110 L634,160
+        L660,160 L660,130 L665,130 L665,120 L675,120 L675,130 L680,130 L680,160
+        L700,160 L700,95 L704,93 L708,93 L708,75 L710,72 L712,72 L714,75 L714,93 L718,93 L722,95 L722,160
+        L750,160 L750,140 L755,140 L755,130 L765,130 L765,140 L770,140 L770,160
+        L800,160 L800,145 L810,145 L810,155 L820,155 L820,160
+        L845,160 L845,65 L848,62 L852,62 L852,30 L855,25 L858,25 L861,30 L861,62 L865,62 L868,65 L868,160
+        L890,160 L890,135 L895,135 L895,120 L900,120 L900,135 L910,135 L910,160
+        L940,160 L940,105 L944,103 L948,100 L952,100 L956,103 L960,105 L960,160
+        L980,160 L980,140 L985,140 L985,150 L1000,150 L1000,160
+        L1030,160 L1030,85 L1034,83 L1038,80 L1038,50 L1040,45 L1042,50 L1042,80 L1046,83 L1050,85 L1050,160
+        L1080,160 L1080,130 L1085,130 L1085,140 L1095,140 L1095,160
+        L1120,160 L1120,110 L1125,108 L1130,110 L1130,160
+        L1150,160 L1150,140 L1155,140 L1155,135 L1165,135 L1165,140 L1170,140 L1170,160
+        L1200,160 L1200,180 Z
+      "/>
+      <polygon fill="rgba(212,160,58,0.06)" points="555,145 570,130 585,145"/>
+      <line x1="170" y1="68" x2="130" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+      <line x1="170" y1="68" x2="145" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+      <line x1="170" y1="68" x2="195" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+      <line x1="170" y1="68" x2="210" y2="155" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/>
+    </svg>
+    <div class="hero-skyline-glow"></div>
+  </div>
+
   <div class="hero-scroll-cue">
     <span></span>
   </div>
@@ -1042,7 +1163,7 @@ footer {
         <div class="timeline-year">1996</div>
         <div class="timeline-subtitle">The Beginning</div>
         <p class="timeline-desc">
-          Before Google, before MySpace, before anyone knew what a "dot com" could be&mdash;BostonBands staked its claim on the early internet. The original site had <strong>a graffiti wall, a visitor counter, and a "Best experienced with Internet Explorer" badge.</strong> It was raw, it was weird, and it was exactly right for the time. By 2001 came the deep red <strong>"Site of the Second Revolution"</strong> era, guitar pick buttons, and a Backstage Pass for the VIPs.
+          Before Google, before MySpace, before anyone knew what a "dot com" could be&mdash;BostonBands staked its claim on the early internet. The original site had <strong>a graffiti wall, a visitor counter, and a "Best experienced with Internet Explorer" badge.</strong> It was raw, it was weird, and it was exactly right for the time. By 2001 came the <strong>"Site of the Second Revolution"</strong> era.
         </p>
       </div>
     </div>
