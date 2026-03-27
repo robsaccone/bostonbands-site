@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
 /* ============================================
    CSS CUSTOM PROPERTIES
@@ -177,6 +177,160 @@ body::before {
 }
 .section-heading .line:nth-child(2) {
   transition-delay: 0.12s;
+}
+
+/* ============================================
+   TIMELINE / THROUGH THE YEARS
+   ============================================ */
+.timeline-section {
+  overflow: hidden;
+}
+.timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--surface-4) 10%, var(--surface-4) 90%, transparent);
+}
+.timeline-era {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 5rem;
+  position: relative;
+}
+.timeline-era:last-child {
+  margin-bottom: 0;
+}
+/* Alternating layout */
+.timeline-era:nth-child(even) .timeline-image {
+  order: 2;
+}
+.timeline-era:nth-child(even) .timeline-text {
+  order: 1;
+  text-align: right;
+}
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: 3px solid var(--black);
+  z-index: 2;
+  box-shadow: 0 0 20px rgba(212,160,58,0.3);
+}
+.timeline-image {
+  position: relative;
+}
+.timeline-image img {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--surface-3);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s;
+}
+.timeline-image:hover img {
+  transform: scale(1.02);
+  box-shadow: 0 12px 50px rgba(0,0,0,0.6), 0 0 30px rgba(212,160,58,0.06);
+}
+.timeline-text {
+  padding: 1rem 2rem;
+}
+.timeline-year {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.timeline-subtitle {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+.timeline-desc {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-body);
+}
+.timeline-desc strong {
+  color: var(--text-bright);
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .timeline::before {
+    left: 1.5rem;
+  }
+  .timeline-era {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-left: 3.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .timeline-era:nth-child(even) .timeline-image { order: 0; }
+  .timeline-era:nth-child(even) .timeline-text { order: 0; text-align: left; }
+  .timeline-dot {
+    left: 1.5rem;
+    top: 0;
+    transform: translate(-50%, 0);
+  }
+  .timeline-text {
+    padding: 0;
+  }
+}
+
+/* ============================================
+   GRAFFITI SIGNATURES
+   ============================================ */
+
+.graffiti {
+  position: absolute;
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+  font-weight: 400;
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.archive-card:hover .graffiti {
+  opacity: 0.7;
+}
+.graffiti-1 {
+  top: 12%;
+  left: 6%;
+  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+  color: #7b9cd4;
+  transform: rotate(-4deg);
+}
+.graffiti-2 {
+  top: 18%;
+  right: 7%;
+  font-size: clamp(0.75rem, 1.3vw, 1rem);
+  color: #d47b7b;
+  transform: rotate(3deg);
+}
+.graffiti-3 {
+  bottom: 14%;
+  right: 15%;
+  font-size: clamp(0.75rem, 1.3vw, 1rem);
+  color: #7bd49b;
+  transform: rotate(-2deg);
 }
 
 /* ============================================
@@ -462,6 +616,7 @@ nav.scrolled {
   background: var(--surface-1);
   border-top: 1px solid var(--surface-3);
   border-bottom: 1px solid var(--surface-3);
+  text-align: center;
 }
 .numbers-grid {
   display: grid;
@@ -470,6 +625,7 @@ nav.scrolled {
   max-width: 1000px;
   margin: 0 auto;
   text-align: center;
+  justify-content: center;
 }
 .number-item {
   padding: 2rem 1rem;
@@ -494,10 +650,18 @@ nav.scrolled {
   color: var(--amber-dim);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .numbers-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+  }
+}
+@media (min-width: 769px) {
+  .number-value {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+  }
+  .number-item {
+    padding: 2rem 0.5rem;
   }
 }
 
@@ -829,33 +993,105 @@ footer {
       BostonBands.com was founded in <span class="highlight">1996</span> by Alex Willis with a simple mission: to connect local music fans with the bands and music they love. For 30 years, we provided this service for free to Boston-area musicians, venues, and fans of live music and good times.
     </p>
     <p>
-      What started as a simple directory grew into the <span class="highlight">largest online community</span> for New England local music&mdash;a place where thousands of artists, venues, and fans came together around the music they loved. From basement shows in Allston to stages at the Paradise and Middle East, if it was local and it rocked, it was on BostonBands.
+      What started as a simple directory grew into the <span class="highlight">largest online community</span> for New England local music&mdash;a place where 13,000+ bands, 6,700+ venues, and thousands of fans came together around the music they loved. From basement shows in Allston to stages at the Paradise and Middle East, if it was local and it rocked, it was on BostonBands.
     </p>
     <p>
       This site stands as an archive and a thank-you to everyone who was part of the scene. The bands who uploaded their first demos. The venues who kept live music alive. The fans who showed up on a Tuesday night for a band they'd never heard of. This was yours.
     </p>
   </div>
+
+  <div class="story-content reveal" style="margin-top:3rem; margin-bottom:1rem;">
+    <div class="section-label">Through the Years</div>
+  </div>
+
+  <div class="timeline">
+    <!-- Era 1: 1996–2001 -->
+    <div class="timeline-era reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-image">
+        <img src="images/era-1996-2001.png" alt="BostonBands.com in 1996 and 2001" loading="lazy">
+      </div>
+      <div class="timeline-text">
+        <div class="timeline-year">1996</div>
+        <div class="timeline-subtitle">The Beginning</div>
+        <p class="timeline-desc">
+          Before Google, before MySpace, before anyone knew what a "dot com" could be&mdash;BostonBands staked its claim on the early internet. The original site had <strong>a graffiti wall, a visitor counter, and a "Best experienced with Internet Explorer" badge.</strong> It was raw, it was weird, and it was exactly right for the time. By 2001 came the deep red <strong>"Site of the Second Revolution"</strong> era, guitar pick buttons, and a Backstage Pass for the VIPs.
+        </p>
+      </div>
+    </div>
+
+    <!-- Era 2: 2008–2012 -->
+    <div class="timeline-era reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-image">
+        <img src="images/era-2008-2012.png" alt="BostonBands.com in 2008 and 2012" loading="lazy">
+      </div>
+      <div class="timeline-text">
+        <div class="timeline-year">2008</div>
+        <div class="timeline-subtitle">Growing the Community</div>
+        <p class="timeline-desc">
+          The Facebook era arrived, but Boston's music scene already had its own social network. BostonBands grew into <strong>a true community&mdash;band directories, gig calendars, forums, classifieds, and T-shirt sales.</strong> Bands managed their own profiles and fans argued about the best Tuesday night shows. By 2012, the "WICKED MUSIC" redesign arrived just in time for people to check gig listings on their BlackBerrys. <strong>Thousands of bands and over 5,000 venues</strong> already called it home.
+        </p>
+      </div>
+    </div>
+
+    <!-- Era 3: 2013–2016 -->
+    <div class="timeline-era reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-image">
+        <img src="images/era-2013-2016.png" alt="BostonBands.com in 2013 and 2016" loading="lazy">
+      </div>
+      <div class="timeline-text">
+        <div class="timeline-year">2016</div>
+        <div class="timeline-subtitle">20th Anniversary Relaunch</div>
+        <p class="timeline-desc">
+          Twenty years in, BostonBands got its biggest reinvention. The dark theme and the iconic fist logo gave the site a proper identity, and <strong>BostonBands Radio</strong> let you stream original tracks from local artists while you figured out where to go that night. Smartphones meant <strong>you could find a show from the bar you were already at.</strong> At its peak: 13,500+ bands, 6,700+ venues, 4,300+ songs, and over 36,000 gig listings.
+        </p>
+      </div>
+    </div>
+
+    <!-- Era 4: 2026 -->
+    <div class="timeline-era reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-image archive-card" style="position:relative; aspect-ratio:16/9; background: var(--surface-2); border-radius:4px; border:1px solid var(--surface-3); overflow:hidden;">
+        <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; padding:2rem;">
+            <div style="font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.5rem); color:var(--white); text-transform:uppercase; line-height:0.9;">Boston<span style="color:var(--amber);">Bands</span></div>
+            <div style="font-family:var(--font-condensed); font-weight:600; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.3em; color:var(--text-dim); margin-top:0.75rem;">The Archive</div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-text">
+        <div class="timeline-year">2026</div>
+        <div class="timeline-subtitle">The Archive</div>
+        <p class="timeline-desc">
+          Thirty years after that first graffiti wall went live, the curtain comes down&mdash;but the music doesn't disappear. <strong>This site is the archive</strong>, a place to preserve what BostonBands built: the bands, the venues, the songs, and the memories. Some things are worth keeping.
+        </p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ========== BY THE NUMBERS ========== -->
+
 <section class="numbers-section" id="numbers">
-  <div class="section" style="padding-top:4rem; padding-bottom:4rem;">
+  <div style="padding:4rem 2rem;">
     <div class="numbers-grid">
       <div class="number-item reveal">
-        <div class="number-value">8,000+</div>
-        <div class="number-label">Artists</div>
+        <div class="number-value">13,564</div>
+        <div class="number-label">Bands</div>
       </div>
       <div class="number-item reveal reveal-delay-1">
-        <div class="number-value">6,500+</div>
+        <div class="number-value">6,783</div>
         <div class="number-label">Venues</div>
       </div>
       <div class="number-item reveal reveal-delay-2">
-        <div class="number-value">30</div>
-        <div class="number-label">Years</div>
+        <div class="number-value">4,353</div>
+        <div class="number-label">Songs</div>
       </div>
       <div class="number-item reveal reveal-delay-3">
-        <div class="number-value">1,000s</div>
-        <div class="number-label">Songs</div>
+        <div class="number-value">36,001</div>
+        <div class="number-label">Gigs</div>
       </div>
     </div>
   </div>
