@@ -183,9 +183,6 @@ a:hover { color: var(--amber-glow); }
   margin-right: auto;
 }
 
-/* Shuffle indicator */
-.shuffle-active { color: var(--amber) !important; }
-
 /* Tracklist */
 .tracklist-wrap {
   max-width: 600px;
@@ -256,7 +253,6 @@ a:hover { color: var(--amber-glow); }
 </div>
 
 <div class="controls">
-  <button class="btn" id="btnShuffle" title="Shuffle">&#8645;</button>
   <button class="btn" id="btnPrev" title="Previous">&#9664;&#9664;</button>
   <button class="btn btn-play" id="btnPlay" title="Play"><span class="icon">&#9654;</span></button>
   <button class="btn" id="btnNext" title="Next">&#9654;&#9654;</button>
@@ -285,7 +281,6 @@ a:hover { color: var(--amber-glow); }
   const btnPlay = document.getElementById('btnPlay');
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
-  const btnShuffle = document.getElementById('btnShuffle');
   const progressBar = document.getElementById('progressBar');
   const progressFill = document.getElementById('progressFill');
   const timeCurrent = document.getElementById('timeCurrent');
@@ -298,7 +293,6 @@ a:hover { color: var(--amber-glow); }
 
   let tracks = [];
   let currentIndex = -1;
-  let isShuffled = false;
   let playOrder = [];
 
   function formatTime(s) {
@@ -310,12 +304,6 @@ a:hover { color: var(--amber-glow); }
 
   function buildPlayOrder() {
     playOrder = tracks.map((_, i) => i);
-    if (isShuffled) {
-      for (let i = playOrder.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [playOrder[i], playOrder[j]] = [playOrder[j], playOrder[i]];
-      }
-    }
   }
 
   function loadTrack(index) {
@@ -380,12 +368,6 @@ a:hover { color: var(--amber-glow); }
   btnPlay.addEventListener('click', togglePlay);
   btnNext.addEventListener('click', nextTrack);
   btnPrev.addEventListener('click', prevTrack);
-  btnShuffle.addEventListener('click', () => {
-    isShuffled = !isShuffled;
-    btnShuffle.classList.toggle('shuffle-active', isShuffled);
-    buildPlayOrder();
-  });
-
   audio.addEventListener('timeupdate', () => {
     if (audio.duration) {
       progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
