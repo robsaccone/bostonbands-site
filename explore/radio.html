@@ -75,19 +75,20 @@ a:hover { color: var(--amber-glow); }
   text-align: center;
 }
 .np-photo {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  margin: 0 auto 1.25rem;
+  width: 220px;
+  height: 220px;
+  border-radius: 6px;
+  margin: 0 auto 1.5rem;
   background: var(--surface-2);
   background-size: cover;
   background-position: center;
-  border: 2px solid var(--surface-4);
+  border: 1px solid var(--surface-4);
   transition: background-image 0.3s;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
 }
 .np-photo.has-photo {
-  border-color: var(--amber-dim);
-  box-shadow: 0 0 30px rgba(212,160,58,0.1);
+  border-color: var(--surface-4);
+  box-shadow: 0 12px 50px rgba(0,0,0,0.6), 0 0 40px rgba(212,160,58,0.08);
 }
 .np-label {
   font-family: var(--font-condensed);
@@ -213,16 +214,18 @@ a:hover { color: var(--amber-glow); }
   background: var(--surface-2);
   border-bottom-color: var(--amber-dim);
 }
-.track-num {
-  font-family: var(--font-condensed);
-  font-weight: 700;
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  width: 1.5rem;
-  text-align: right;
+.track-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  background-size: cover;
+  background-position: center;
   flex-shrink: 0;
 }
-.track.active .track-num { color: var(--amber); }
+.track.active .track-thumb {
+  border: 1px solid var(--amber-dim);
+}
 .track-info { flex: 1; min-width: 0; }
 .track-title {
   font-size: 0.9rem;
@@ -394,15 +397,16 @@ a:hover { color: var(--amber-glow); }
       trackCountEl.textContent = tracks.length;
       buildPlayOrder();
 
-      tracklistEl.innerHTML = tracks.map((t, i) => `
-        <div class="track" data-index="${i}">
-          <span class="track-num">${i + 1}</span>
+      tracklistEl.innerHTML = tracks.map((t, i) => {
+        const thumbStyle = t.photo ? `background-image:url(../songs/photos/${t.photo})` : '';
+        return `<div class="track" data-index="${i}">
+          <div class="track-thumb" style="${thumbStyle}"></div>
           <div class="track-info">
             <div class="track-title">${t.title === 'Untitled' ? t.artist : t.title}</div>
             <div class="track-artist">${t.title === 'Untitled' ? t.genre : t.artist}</div>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
 
       tracklistEl.querySelectorAll('.track').forEach(el => {
         el.addEventListener('click', () => {
