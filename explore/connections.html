@@ -195,15 +195,17 @@ svg { display: block; }
       const simulation = d3.forceSimulation(data.nodes)
         .force('link', d3.forceLink(data.links)
           .id(d => d.id)
-          .distance(d => 200 - Math.min(d.shared_bands, 150))
+          .distance(d => 300 - Math.min(d.shared_bands * 0.3, 150))
         )
-        .force('charge', d3.forceManyBody().strength(-400))
+        .force('charge', d3.forceManyBody().strength(-1200))
         .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('collision', d3.forceCollide().radius(d => nodeRadius(d) + 8));
+        .force('collision', d3.forceCollide().radius(d => nodeRadius(d) + 15))
+        .force('x', d3.forceX(width / 2).strength(0.03))
+        .force('y', d3.forceY(height / 2).strength(0.03));
 
       function nodeRadius(d) {
         const deg = degree[d.id] || 1;
-        return Math.max(8, Math.min(40, 8 + (deg / maxDegree) * 32));
+        return Math.max(10, Math.min(50, 10 + (deg / maxDegree) * 40));
       }
 
       // Links
