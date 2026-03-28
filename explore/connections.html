@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Venue Connections — BostonBands Archive</title>
+<title>The Universe — BostonBands Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
@@ -112,17 +112,61 @@ a:hover { color: var(--amber-glow); }
   font-weight: 600;
 }
 
+.explainer-card {
+  position: fixed;
+  bottom: 3rem;
+  left: 1.5rem;
+  z-index: 1000;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--surface-4);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  max-width: 280px;
+}
+.explainer-title {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.explainer-card p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.explainer-hint {
+  font-family: var(--font-condensed);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+@media (max-width: 600px) {
+  .explainer-card { display: none; }
+}
+
 svg { display: block; }
 </style>
 </head>
 <body>
 
 <header class="page-header">
-  <div class="page-title">Venue <span>Connections</span></div>
+  <div class="page-title">The <span>Universe</span></div>
   <a href="../index.html#explore" class="page-back">&larr; Back</a>
 </header>
 
-<div class="page-subtitle">Venues connected by shared bands &middot; Hover to explore</div>
+<div class="page-subtitle">Boston's local music universe</div>
+
+<div class="explainer-card" id="explainer">
+  <div class="explainer-title">The Universe</div>
+  <p>Venues connected by the bands they share. The bigger the node, the more connections it has. Middle East sits at the center of everything.</p>
+  <div class="explainer-hint">Hover to explore &middot; Drag to rearrange</div>
+</div>
+
 <div id="tooltip"></div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -170,17 +214,29 @@ svg { display: block; }
         .attr('stroke', '#1a1a1a')
         .attr('stroke-width', d => Math.max(1, Math.min(6, d.shared_bands / 80)));
 
+      // Glow filter for Middle East
+      const defs = svg.append('defs');
+      const filter = defs.append('filter').attr('id', 'glow');
+      filter.append('feGaussianBlur').attr('stdDeviation', '4').attr('result', 'blur');
+      filter.append('feMerge').selectAll('feMergeNode')
+        .data(['blur', 'SourceGraphic'])
+        .join('feMergeNode')
+        .attr('in', d => d);
+
+      const isMiddleEast = d => d.id.toLowerCase().includes('middle east');
+
       // Nodes
       const node = svg.append('g')
         .selectAll('circle')
         .data(data.nodes)
         .join('circle')
         .attr('r', d => nodeRadius(d))
-        .attr('fill', '#d4a03a')
-        .attr('fill-opacity', 0.7)
-        .attr('stroke', '#e8b84a')
-        .attr('stroke-width', 1)
-        .attr('stroke-opacity', 0.3)
+        .attr('fill', d => isMiddleEast(d) ? '#e8b84a' : '#d4a03a')
+        .attr('fill-opacity', d => isMiddleEast(d) ? 0.9 : 0.7)
+        .attr('stroke', d => isMiddleEast(d) ? '#e8b84a' : '#e8b84a')
+        .attr('stroke-width', d => isMiddleEast(d) ? 2 : 1)
+        .attr('stroke-opacity', d => isMiddleEast(d) ? 0.6 : 0.3)
+        .attr('filter', d => isMiddleEast(d) ? 'url(#glow)' : null)
         .style('cursor', 'pointer')
         .call(d3.drag()
           .on('start', dragstarted)
@@ -199,8 +255,8 @@ svg { display: block; }
           const r = nodeRadius(d);
           return r > 20 ? '11px' : '9px';
         })
-        .attr('fill', '#e8e8e8')
-        .attr('fill-opacity', d => nodeRadius(d) > 15 ? 0.9 : 0.5)
+        .attr('fill', d => isMiddleEast(d) ? '#e8b84a' : '#e8e8e8')
+        .attr('fill-opacity', d => isMiddleEast(d) ? 1 : (nodeRadius(d) > 15 ? 0.9 : 0.5))
         .attr('text-anchor', 'middle')
         .attr('dy', d => nodeRadius(d) + 14)
         .style('pointer-events', 'none');

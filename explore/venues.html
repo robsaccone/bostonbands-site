@@ -80,6 +80,43 @@ a:hover { color: var(--amber-glow); }
   z-index: 1;
 }
 
+.explainer-card {
+  position: fixed;
+  bottom: 3rem;
+  left: 1.5rem;
+  z-index: 1000;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--surface-4);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  max-width: 280px;
+}
+.explainer-title {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.explainer-card p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.explainer-hint {
+  font-family: var(--font-condensed);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+@media (max-width: 600px) {
+  .explainer-card { display: none; }
+}
+
 /* Override Leaflet popup styles */
 .leaflet-popup-content-wrapper {
   background: var(--surface-2);
@@ -138,6 +175,12 @@ a:hover { color: var(--amber-glow); }
 <body>
 
 <div id="map"></div>
+
+<div class="explainer-card">
+  <div class="explainer-title">Venue Map</div>
+  <p>2,492 venues across Greater Boston. Every bar, club, coffee shop, and church basement that hosted live music.</p>
+  <div class="explainer-hint">Click any marker to see its story</div>
+</div>
 
 <header class="page-header">
   <div class="page-title">Venue <span>Map</span></div>

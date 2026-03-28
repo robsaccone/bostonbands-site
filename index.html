@@ -334,6 +334,35 @@ body::before {
 }
 
 /* ============================================
+   ARCHIVE INTRO & SONG INDICATOR
+   ============================================ */
+.archive-intro {
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.highlight-card-song {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+}
+.highlight-card.atmosphere .highlight-card-overlay {
+  background: linear-gradient(to top, rgba(5,5,5,0.7) 0%, transparent 60%);
+}
+.highlight-card.atmosphere .highlight-card-name {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* ============================================
    ON THIS DATE
    ============================================ */
 .on-this-date-section {
@@ -1131,9 +1160,7 @@ footer {
   <a href="#hero" class="nav-logo"><img src="bb_site_logo_white.png" alt="BostonBands" class="nav-logo-img"></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#story">Story</a></li>
-    <li><a href="#highlights">Highlights</a></li>
-    <li><a href="#music">Music</a></li>
-    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#archive">Archive</a></li>
     <li><a href="#explore">Explore</a></li>
     <li><a href="#thankyou">Thank You</a></li>
   </ul>
@@ -1360,12 +1387,13 @@ footer {
   </div>
 </section>
 
-<!-- ========== HIGHLIGHTS ========== -->
-<section class="section" id="highlights">
+<!-- ========== FROM THE ARCHIVE ========== -->
+<section class="section" id="archive">
   <div class="reveal">
     <div class="section-label">From the Archive</div>
-    <h2 class="section-heading"><span class="line">Highlights</span></h2>
+    <h2 class="section-heading"><span class="line">The Bands,</span><span class="line">The Venues</span></h2>
     <hr class="section-divider">
+    <p class="archive-intro">Over 4,300 original tracks, 13,000 bands, and 6,700 venues. From punk demos recorded in Allston basements to packed houses at the Middle East&mdash;this was the scene.</p>
   </div>
   <div class="highlights-grid">
     <div class="highlight-card reveal">
@@ -1392,15 +1420,22 @@ footer {
         <div class="highlight-card-detail">Allston, MA</div>
       </div>
     </div>
-    <div class="highlight-card reveal">
+    <div class="highlight-card atmosphere reveal">
+      <img src="images/gallery/silhouette-guitars.jpg" alt="Guitarists silhouetted on stage" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-name" style="font-size:0.9rem;">Every stage. Every night.</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-1">
       <img src="images/bands/peter-parcek.jpg" alt="Peter Parcek" loading="lazy">
       <div class="highlight-card-overlay">
+        <div class="highlight-card-song">&#9835; 4 songs in archive</div>
         <div class="highlight-card-type">Band &middot; Since 1999</div>
         <div class="highlight-card-name">Peter Parcek</div>
         <div class="highlight-card-detail">BostonBands member #1</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-1">
+    <div class="highlight-card reveal reveal-delay-2">
       <img src="images/venues/paradise.jpg" alt="Paradise Rock Club" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Venue &middot; 846 gigs</div>
@@ -1408,15 +1443,22 @@ footer {
         <div class="highlight-card-detail">Boston, MA</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-2">
+    <div class="highlight-card reveal">
       <img src="images/bands/joe-mack.jpg" alt="The Joe Mack Band" loading="lazy">
       <div class="highlight-card-overlay">
+        <div class="highlight-card-song">&#9835; Song in archive</div>
         <div class="highlight-card-type">Band &middot; 299 gigs</div>
         <div class="highlight-card-name">The Joe Mack Band</div>
         <div class="highlight-card-detail">50 venues &middot; #1 ranked</div>
       </div>
     </div>
-    <div class="highlight-card reveal">
+    <div class="highlight-card atmosphere reveal reveal-delay-1">
+      <img src="images/gallery/crowd-blue.jpg" alt="Concert crowd with stage lights" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-name" style="font-size:0.9rem;">The crowd was the show.</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-2">
       <img src="images/venues/sinclair.jpg" alt="The Sinclair" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Venue &middot; 1,167 gigs</div>
@@ -1424,7 +1466,7 @@ footer {
         <div class="highlight-card-detail">Cambridge, MA</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-1">
+    <div class="highlight-card reveal">
       <img src="images/bands/radio-honey.jpg" alt="Radio Honey" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Band &middot; 130 gigs</div>
@@ -1432,7 +1474,7 @@ footer {
         <div class="highlight-card-detail">48 venues &middot; Since 2017</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-2">
+    <div class="highlight-card reveal reveal-delay-1">
       <img src="images/venues/club-passim.jpg" alt="Club Passim" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Venue &middot; 408 gigs</div>
@@ -1440,152 +1482,15 @@ footer {
         <div class="highlight-card-detail">Cambridge, MA</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ========== MUSIC ========== -->
-<section class="music-section" id="music">
-  <div class="section">
-    <div class="music-layout">
-      <div class="music-intro reveal">
-        <div class="section-label">BostonBands Radio</div>
-        <h2 class="section-heading"><span class="line">The Sound</span><span class="line">of the Scene</span></h2>
-        <hr class="section-divider">
-        <p>
-          Over 4,300 original tracks from Boston's local music scene lived on BostonBands Radio&mdash;recordings from artists who played every bar, club, and coffee shop in Greater Boston.
-        </p>
-        <p>
-          From punk demos recorded in Allston basements to polished studio cuts from Berklee grads, the catalog captured what made this scene special: raw, real, and unapologetically local.
-        </p>
-      </div>
-      <div class="reveal reveal-delay-2">
-        <ul class="tracklist">
-          <li class="track">
-            <span class="track-num">1</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Showbiz Blues</div>
-              <div class="track-artist">Peter Parcek</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">2</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Tears Like Diamonds</div>
-              <div class="track-artist">Peter Parcek</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">3</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Leap Into the Dark</div>
-              <div class="track-artist">Bald Walter</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">4</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Strip It Down</div>
-              <div class="track-artist">Munk</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">5</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Lady Fire</div>
-              <div class="track-artist">Flexie</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">6</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">New Poison</div>
-              <div class="track-artist">THE FREEZE</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">7</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Little White Dove</div>
-              <div class="track-artist">Jess Klein</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">8</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Troopy's Blues</div>
-              <div class="track-artist">Two Ton Shoe</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">9</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Favorite Waitress</div>
-              <div class="track-artist">The Modifiers</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">10</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Babylon Train</div>
-              <div class="track-artist">Desar</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== GALLERY ========== -->
-<section class="section" id="gallery">
-  <div class="reveal">
-    <div class="section-label">The Gallery</div>
-    <h2 class="section-heading"><span class="line">The Scene,</span><span class="line">Captured</span></h2>
-    <hr class="section-divider">
-  </div>
-  <div class="gallery-mosaic">
-    <div class="gallery-item wide reveal">
-      <img src="images/gallery/silhouette-guitars.jpg" alt="Guitarists silhouetted on stage" loading="lazy">
-    </div>
-    <div class="gallery-item tall reveal reveal-delay-1">
-      <img src="images/gallery/parcek.jpg" alt="Peter Parcek - BostonBands member #1" loading="lazy">
-    </div>
-    <div class="gallery-item reveal reveal-delay-2">
+    <div class="highlight-card atmosphere reveal reveal-delay-2">
       <img src="images/gallery/guitar-closeup.jpg" alt="Guitar closeup on stage" loading="lazy">
-    </div>
-    <div class="gallery-item reveal">
-      <img src="images/gallery/radio-honey-live.jpg" alt="Radio Honey performing live" loading="lazy">
-    </div>
-    <div class="gallery-item reveal reveal-delay-1">
-      <img src="images/gallery/gearon.jpg" alt="Get Your Gear On - BostonBands" loading="lazy">
-    </div>
-    <div class="gallery-item wide reveal reveal-delay-2">
-      <img src="images/gallery/crowd-blue.jpg" alt="Concert crowd with stage lights" loading="lazy">
-    </div>
-    <div class="gallery-item reveal">
-      <img src="images/gallery/stu-lee-live.jpg" alt="Stu Lee performing live" loading="lazy">
-    </div>
-    <div class="gallery-item tall reveal reveal-delay-1">
-      <img src="images/gallery/fil-pacino-art.jpg" alt="Fil Pacino - Death by Lions" loading="lazy">
-    </div>
-    <div class="gallery-item reveal reveal-delay-2">
-      <img src="images/gallery/crowd.jpg" alt="Concert crowd" loading="lazy">
-    </div>
-    <div class="gallery-item reveal">
-      <img src="images/gallery/featured-artist.png" alt="Featured artist on stage" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-name" style="font-size:0.9rem;">Raw. Real. Local.</div>
+      </div>
     </div>
   </div>
 </section>
+
 
 <!-- ========== EXPLORE ========== -->
 <section class="section explore-section" id="explore">
@@ -1596,7 +1501,7 @@ footer {
       <span class="explore-dot">&middot;</span>
       <a href="explore/leaderboard.html">Leaderboard</a>
       <span class="explore-dot">&middot;</span>
-      <a href="explore/connections.html">Connections</a>
+      <a href="explore/connections.html">The Universe</a>
     </p>
   </div>
 </section>
