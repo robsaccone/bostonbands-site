@@ -50,7 +50,8 @@ def export_on_this_date(cur):
                EXTRACT(DAY FROM g.gigdate)::int as day,
                g.gigdate::date as gig_date,
                b.bandname, v.venuename, v.city,
-               g.gigname
+               g.gigname,
+               COALESCE(b.poprank, 0) + COALESCE(v.poprank, 0) as score
         FROM gigs g
         JOIN bands b ON g.bandid = b.bandid
         JOIN venues v ON g.venueid = v.venueid
@@ -70,6 +71,7 @@ def export_on_this_date(cur):
             "venue": row["venuename"],
             "city": row["city"],
             "gigname": row["gigname"],
+            "score": float(row["score"]),
         })
 
     os.makedirs(os.path.join(DATA_DIR, "on-this-date"), exist_ok=True)

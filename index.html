@@ -1753,17 +1753,14 @@ footer {
       .then(data => {
         if (!data.gigs || data.gigs.length === 0) return;
 
-        // Pick up to 5 interesting gigs — prefer ones with gigname, diverse years
-        const named = data.gigs.filter(g => g.gigname && g.gigname.trim());
-        const pool = named.length >= 5 ? named : data.gigs;
+        // Pick the top 5 gigs by popularity score, one per year
+        const sorted = [...data.gigs].sort((a, b) => (b.score || 0) - (a.score || 0));
         const seen = new Set();
         const picks = [];
-        // Shuffle
-        const shuffled = [...pool].sort(() => Math.random() - 0.5);
-        for (const g of shuffled) {
+        for (const g of sorted) {
           const year = g.date.slice(0, 4);
-          if (!seen.has(year + g.venue)) {
-            seen.add(year + g.venue);
+          if (!seen.has(year)) {
+            seen.add(year);
             picks.push(g);
             if (picks.length >= 5) break;
           }
