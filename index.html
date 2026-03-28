@@ -370,25 +370,27 @@ body::before {
   padding-bottom: 2rem;
 }
 .otd-gigs {
-  max-width: 640px;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  max-width: 900px;
   margin: 0 auto;
-  text-align: center;
 }
 .otd-gig {
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.85rem;
+  line-height: 1.5;
   color: var(--text-muted);
 }
 .otd-gig .otd-year {
   font-family: var(--font-condensed);
-  font-weight: 600;
-  font-size: 0.75rem;
+  font-weight: 700;
+  font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--amber-dim);
   display: block;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.2rem;
 }
 .otd-gig .otd-band {
   color: var(--text-bright);
@@ -396,15 +398,21 @@ body::before {
 }
 .otd-gig .otd-venue {
   color: var(--amber);
+  font-size: 0.8rem;
 }
-.otd-total {
-  margin-top: 1.5rem;
+.otd-gig .otd-at {
+  color: var(--text-dim);
+}
+.otd-more {
+  margin-top: 1.25rem;
   font-family: var(--font-condensed);
   font-weight: 600;
   font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--text-dim);
+}
+@media (max-width: 600px) {
+  .otd-gigs { gap: 1.25rem; }
 }
 
 /* ============================================
@@ -1346,7 +1354,7 @@ footer {
     <h2 class="section-heading"><span class="line" id="otdHeading"></span></h2>
     <hr class="section-divider">
     <div class="otd-gigs" id="otdGigs"></div>
-    <div class="otd-total" id="otdTotal"></div>
+    <div class="otd-more" id="otdTotal"></div>
   </div>
 </section>
 
@@ -1753,7 +1761,7 @@ footer {
       .then(data => {
         if (!data.gigs || data.gigs.length === 0) return;
 
-        // Pick the top 5 gigs by popularity score, one per year
+        // Pick the top 4 gigs by popularity score, one per year
         const sorted = [...data.gigs].sort((a, b) => (b.score || 0) - (a.score || 0));
         const seen = new Set();
         const picks = [];
@@ -1762,7 +1770,7 @@ footer {
           if (!seen.has(year)) {
             seen.add(year);
             picks.push(g);
-            if (picks.length >= 5) break;
+            if (picks.length >= 4) break;
           }
         }
         picks.sort((a, b) => a.date.localeCompare(b.date));
@@ -1776,15 +1784,16 @@ footer {
           const year = g.date.slice(0, 4);
           const band = g.band || 'Unknown';
           const venue = g.venue || 'Unknown venue';
-          const city = g.city ? `, ${g.city}` : '';
           return `<div class="otd-gig">
             <span class="otd-year">${year}</span>
-            <span class="otd-band">${band}</span> at <span class="otd-venue">${venue}</span>${city}
+            <span class="otd-band">${band}</span><br>
+            <span class="otd-at">at </span><span class="otd-venue">${venue}</span>
           </div>`;
         }).join('');
 
-        document.getElementById('otdTotal').textContent =
-          `${data.total_gigs} gigs on this date across the years`;
+        const remaining = data.total_gigs - picks.length;
+        document.getElementById('otdTotal').innerHTML =
+          remaining > 0 ? `&hellip;and ${remaining.toLocaleString()} more gigs on this date` : '';
 
         document.getElementById('onthisdate').style.display = '';
       })
