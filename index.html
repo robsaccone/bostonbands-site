@@ -334,6 +334,151 @@ body::before {
 }
 
 /* ============================================
+   ARCHIVE INTRO & SONG INDICATOR
+   ============================================ */
+.archive-intro {
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.highlight-card-song {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+}
+.highlight-card.atmosphere .highlight-card-overlay {
+  background: linear-gradient(to top, rgba(5,5,5,0.7) 0%, transparent 60%);
+}
+.highlight-card.atmosphere .highlight-card-name {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   ON THIS DATE
+   ============================================ */
+.on-this-date-section {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.on-this-date-section .section-heading {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+}
+.otd-gigs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.otd-gig {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.otd-gig .otd-year {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.otd-gig .otd-band {
+  color: var(--text-bright);
+  font-weight: 400;
+}
+.otd-gig .otd-venue {
+  color: var(--amber);
+  font-size: 0.8rem;
+}
+.otd-gig .otd-at {
+  color: var(--text-dim);
+}
+.otd-more {
+  margin-top: 1.25rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+@media (max-width: 600px) {
+  .otd-gigs { gap: 1.25rem; }
+}
+
+/* ============================================
+   EXPLORE THE ARCHIVE
+   ============================================ */
+.explore-section {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+.explore-intro {
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.explore-card {
+  display: block;
+  padding: 1.5rem 1.25rem;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-3);
+  border-radius: 4px;
+  text-align: left;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+}
+.explore-card:hover {
+  border-color: var(--amber-dim);
+  background: var(--surface-3);
+  transform: translateY(-2px);
+  color: inherit;
+}
+.explore-card-name {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.explore-card-desc {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.explore-card:hover .explore-card-desc {
+  color: var(--text-body);
+}
+@media (max-width: 600px) {
+  .explore-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+}
+
+/* ============================================
    NAVIGATION
    ============================================ */
 nav {
@@ -360,15 +505,14 @@ nav.scrolled {
   align-items: center;
 }
 .nav-logo-img {
-  height: 48px;
+  height: 36px;
   width: auto;
-  opacity: 0.92;
+  border-radius: 50%;
+  opacity: 0.85;
   transition: opacity 0.3s;
-  filter: invert(1) hue-rotate(180deg) brightness(1) saturate(0.9);
 }
 .nav-logo:hover .nav-logo-img {
   opacity: 1;
-  filter: invert(1) hue-rotate(180deg) brightness(1) saturate(1);
 }
 .nav-links {
   display: flex;
@@ -669,6 +813,8 @@ nav.scrolled {
   height: 2px;
   background: var(--amber);
   border: none;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 2rem;
 }
 
@@ -690,7 +836,9 @@ nav.scrolled {
 }
 .story-content {
   max-width: 680px;
+  margin: 0 auto;
   padding-top: 2rem;
+  text-align: center;
 }
 .story-content p {
   font-size: 1.15rem;
@@ -1057,12 +1205,11 @@ footer {
 
 <!-- ========== NAVIGATION ========== -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo"><img src="bb_site_logo_white.png" alt="BostonBands" class="nav-logo-img"></a>
+  <a href="#hero" class="nav-logo"><img src="bb_logo_circle.png" alt="BostonBands" class="nav-logo-img"></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#story">Story</a></li>
-    <li><a href="#highlights">Highlights</a></li>
-    <li><a href="#music">Music</a></li>
-    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#archive">Archive</a></li>
+    <li><a href="#explore">Explore</a></li>
     <li><a href="#thankyou">Thank You</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -1171,10 +1318,10 @@ footer {
     <h2 class="section-heading"><span class="line">30 Years of</span><span class="line">Local Music</span></h2>
     <hr class="section-divider">
     <p>
-      BostonBands.com was founded in <span class="highlight">1996</span> by Alex Willis with a simple mission: to connect local music fans with the bands and music they love. For 30 years, we provided this service for free to Boston-area musicians, venues, and fans of live music and good times.
+      BostonBands.com was founded in <span class="highlight">1996</span> by Alex Willis with a simple mission: to connect local music fans with the bands they love. For 30 years, we provided this service for free to Boston-area musicians, venues, and fans of live music.
     </p>
     <p>
-      What started as a simple directory grew into the <span class="highlight">largest online community</span> for New England local music&mdash;a place where 13,000+ bands, 6,700+ venues, and thousands of fans came together around the music they loved. From basement shows in Allston to stages at the Paradise and Middle East, if it was local and it rocked, it was on BostonBands.
+      What started as a simple directory grew into the <span class="highlight">largest online community</span> for New England local music&mdash;13,000+ bands, 6,700+ venues, and thousands of fans came together around the music they loved. From basement shows in Allston to the Paradise and Middle East, if it was local and it rocked, it was on BostonBands.
     </p>
   </div>
 </section>
@@ -1203,9 +1350,20 @@ footer {
   </div>
 </section>
 
+<!-- ========== ON THIS DATE ========== -->
+<section class="section on-this-date-section" id="onthisdate" style="display:none;">
+  <div class="reveal">
+    <div class="section-label">On This Date</div>
+    <h2 class="section-heading"><span class="line" id="otdHeading"></span></h2>
+    <hr class="section-divider">
+    <div class="otd-gigs" id="otdGigs"></div>
+    <div class="otd-more" id="otdTotal"></div>
+  </div>
+</section>
+
 <!-- ========== THROUGH THE YEARS ========== -->
 <section class="section timeline-section" id="timeline">
-  <div class="reveal">
+  <div class="reveal" style="text-align:center;">
     <div class="section-label">Through the Years</div>
   </div>
 
@@ -1277,12 +1435,13 @@ footer {
   </div>
 </section>
 
-<!-- ========== HIGHLIGHTS ========== -->
-<section class="section" id="highlights">
+<!-- ========== FROM THE ARCHIVE ========== -->
+<section class="section" id="archive">
   <div class="reveal">
     <div class="section-label">From the Archive</div>
-    <h2 class="section-heading"><span class="line">Highlights</span></h2>
+    <h2 class="section-heading"><span class="line">The Bands,</span><span class="line">The Venues</span></h2>
     <hr class="section-divider">
+    <p class="archive-intro">Over 4,300 original tracks, 13,000 bands, and 6,700 venues. From punk demos recorded in Allston basements to packed houses at the Middle East&mdash;this was the scene.</p>
   </div>
   <div class="highlights-grid">
     <div class="highlight-card reveal">
@@ -1309,15 +1468,22 @@ footer {
         <div class="highlight-card-detail">Allston, MA</div>
       </div>
     </div>
-    <div class="highlight-card reveal">
+    <div class="highlight-card atmosphere reveal">
+      <img src="images/gallery/silhouette-guitars.jpg" alt="Guitarists silhouetted on stage" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-name" style="font-size:0.9rem;">Every stage. Every night.</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-1">
       <img src="images/bands/peter-parcek.jpg" alt="Peter Parcek" loading="lazy">
       <div class="highlight-card-overlay">
+        <div class="highlight-card-song">&#9835; 4 songs in archive</div>
         <div class="highlight-card-type">Band &middot; Since 1999</div>
         <div class="highlight-card-name">Peter Parcek</div>
         <div class="highlight-card-detail">BostonBands member #1</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-1">
+    <div class="highlight-card reveal reveal-delay-2">
       <img src="images/venues/paradise.jpg" alt="Paradise Rock Club" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Venue &middot; 846 gigs</div>
@@ -1325,15 +1491,22 @@ footer {
         <div class="highlight-card-detail">Boston, MA</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-2">
+    <div class="highlight-card reveal">
       <img src="images/bands/joe-mack.jpg" alt="The Joe Mack Band" loading="lazy">
       <div class="highlight-card-overlay">
+        <div class="highlight-card-song">&#9835; Song in archive</div>
         <div class="highlight-card-type">Band &middot; 299 gigs</div>
         <div class="highlight-card-name">The Joe Mack Band</div>
         <div class="highlight-card-detail">50 venues &middot; #1 ranked</div>
       </div>
     </div>
-    <div class="highlight-card reveal">
+    <div class="highlight-card atmosphere reveal reveal-delay-1">
+      <img src="images/gallery/crowd-blue.jpg" alt="Concert crowd with stage lights" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-name" style="font-size:0.9rem;">The crowd was the show.</div>
+      </div>
+    </div>
+    <div class="highlight-card reveal reveal-delay-2">
       <img src="images/venues/sinclair.jpg" alt="The Sinclair" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Venue &middot; 1,167 gigs</div>
@@ -1341,7 +1514,7 @@ footer {
         <div class="highlight-card-detail">Cambridge, MA</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-1">
+    <div class="highlight-card reveal">
       <img src="images/bands/radio-honey.jpg" alt="Radio Honey" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Band &middot; 130 gigs</div>
@@ -1349,7 +1522,7 @@ footer {
         <div class="highlight-card-detail">48 venues &middot; Since 2017</div>
       </div>
     </div>
-    <div class="highlight-card reveal reveal-delay-2">
+    <div class="highlight-card reveal reveal-delay-1">
       <img src="images/venues/club-passim.jpg" alt="Club Passim" loading="lazy">
       <div class="highlight-card-overlay">
         <div class="highlight-card-type">Venue &middot; 408 gigs</div>
@@ -1357,149 +1530,35 @@ footer {
         <div class="highlight-card-detail">Cambridge, MA</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ========== MUSIC ========== -->
-<section class="music-section" id="music">
-  <div class="section">
-    <div class="music-layout">
-      <div class="music-intro reveal">
-        <div class="section-label">BostonBands Radio</div>
-        <h2 class="section-heading"><span class="line">The Sound</span><span class="line">of the Scene</span></h2>
-        <hr class="section-divider">
-        <p>
-          Over 4,300 original tracks from Boston's local music scene lived on BostonBands Radio&mdash;recordings from artists who played every bar, club, and coffee shop in Greater Boston.
-        </p>
-        <p>
-          From punk demos recorded in Allston basements to polished studio cuts from Berklee grads, the catalog captured what made this scene special: raw, real, and unapologetically local.
-        </p>
-      </div>
-      <div class="reveal reveal-delay-2">
-        <ul class="tracklist">
-          <li class="track">
-            <span class="track-num">1</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Showbiz Blues</div>
-              <div class="track-artist">Peter Parcek</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">2</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Tears Like Diamonds</div>
-              <div class="track-artist">Peter Parcek</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">3</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Leap Into the Dark</div>
-              <div class="track-artist">Bald Walter</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">4</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Strip It Down</div>
-              <div class="track-artist">Munk</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">5</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Lady Fire</div>
-              <div class="track-artist">Flexie</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">6</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">New Poison</div>
-              <div class="track-artist">THE FREEZE</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">7</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Little White Dove</div>
-              <div class="track-artist">Jess Klein</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">8</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Troopy's Blues</div>
-              <div class="track-artist">Two Ton Shoe</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">9</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Favorite Waitress</div>
-              <div class="track-artist">The Modifiers</div>
-            </div>
-          </li>
-          <li class="track">
-            <span class="track-num">10</span>
-            <span class="track-play">&#9654;</span>
-            <div class="track-info">
-              <div class="track-title">Babylon Train</div>
-              <div class="track-artist">Desar</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== GALLERY ========== -->
-<section class="section" id="gallery">
-  <div class="reveal">
-    <div class="section-label">The Gallery</div>
-    <h2 class="section-heading"><span class="line">The Scene,</span><span class="line">Captured</span></h2>
-    <hr class="section-divider">
-  </div>
-  <div class="gallery-mosaic">
-    <div class="gallery-item wide reveal">
-      <img src="images/gallery/silhouette-guitars.jpg" alt="Guitarists silhouetted on stage" loading="lazy">
-    </div>
-    <div class="gallery-item tall reveal reveal-delay-1">
-      <img src="images/gallery/parcek.jpg" alt="Peter Parcek - BostonBands member #1" loading="lazy">
-    </div>
-    <div class="gallery-item reveal reveal-delay-2">
+    <div class="highlight-card atmosphere reveal reveal-delay-2">
       <img src="images/gallery/guitar-closeup.jpg" alt="Guitar closeup on stage" loading="lazy">
+      <div class="highlight-card-overlay">
+        <div class="highlight-card-name" style="font-size:0.9rem;">Raw. Real. Local.</div>
+      </div>
     </div>
-    <div class="gallery-item reveal">
-      <img src="images/gallery/radio-honey-live.jpg" alt="Radio Honey performing live" loading="lazy">
-    </div>
-    <div class="gallery-item reveal reveal-delay-1">
-      <img src="images/gallery/gearon.jpg" alt="Get Your Gear On - BostonBands" loading="lazy">
-    </div>
-    <div class="gallery-item wide reveal reveal-delay-2">
-      <img src="images/gallery/crowd-blue.jpg" alt="Concert crowd with stage lights" loading="lazy">
-    </div>
-    <div class="gallery-item reveal">
-      <img src="images/gallery/stu-lee-live.jpg" alt="Stu Lee performing live" loading="lazy">
-    </div>
-    <div class="gallery-item tall reveal reveal-delay-1">
-      <img src="images/gallery/fil-pacino-art.jpg" alt="Fil Pacino - Death by Lions" loading="lazy">
-    </div>
-    <div class="gallery-item reveal reveal-delay-2">
-      <img src="images/gallery/crowd.jpg" alt="Concert crowd" loading="lazy">
-    </div>
-    <div class="gallery-item reveal">
-      <img src="images/gallery/featured-artist.png" alt="Featured artist on stage" loading="lazy">
+  </div>
+</section>
+
+
+<!-- ========== EXPLORE ========== -->
+<section class="section explore-section" id="explore">
+  <div class="reveal" style="text-align:center;">
+    <h2 class="section-heading"><span class="line">Explore the</span><span class="line">Archive</span></h2>
+    <hr class="section-divider" style="margin-left:auto; margin-right:auto;">
+    <p class="explore-intro">Thirty years of data, mapped and visualized. See where the music happened, who played the most, and how it all connected.</p>
+    <div class="explore-grid">
+      <a href="explore/venues.html" class="explore-card reveal">
+        <div class="explore-card-name">Venue Map</div>
+        <div class="explore-card-desc">Every stage in Greater Boston, on a map. Zoom into your neighborhood.</div>
+      </a>
+      <a href="explore/leaderboard.html" class="explore-card reveal reveal-delay-1">
+        <div class="explore-card-name">Leaderboard</div>
+        <div class="explore-card-desc">Which venues hosted the most shows? The rankings may surprise you.</div>
+      </a>
+      <a href="explore/connections.html" class="explore-card reveal reveal-delay-2">
+        <div class="explore-card-name">The Universe</div>
+        <div class="explore-card-desc">The web of bands and venues that made Boston's music scene one big family.</div>
+      </a>
     </div>
   </div>
 </section>
@@ -1691,6 +1750,58 @@ footer {
       navLinks.classList.remove('open');
     });
   });
+
+  // ── On This Date ──
+  (function loadOnThisDate() {
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const monthNames = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+
+    fetch(`data/on-this-date/${mm}-${dd}.json`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        if (!data.gigs || data.gigs.length === 0) return;
+
+        // Pick the top 4 gigs by popularity score, one per year
+        const sorted = [...data.gigs].sort((a, b) => (b.score || 0) - (a.score || 0));
+        const seen = new Set();
+        const picks = [];
+        for (const g of sorted) {
+          const year = g.date.slice(0, 4);
+          if (!seen.has(year)) {
+            seen.add(year);
+            picks.push(g);
+            if (picks.length >= 4) break;
+          }
+        }
+        picks.sort((a, b) => a.date.localeCompare(b.date));
+
+        // Render
+        const heading = document.getElementById('otdHeading');
+        heading.textContent = `${monthNames[now.getMonth()]} ${now.getDate()} in Boston Music`;
+
+        const container = document.getElementById('otdGigs');
+        container.innerHTML = picks.map(g => {
+          const year = g.date.slice(0, 4);
+          const band = g.band || 'Unknown';
+          const venue = g.venue || 'Unknown venue';
+          return `<div class="otd-gig">
+            <span class="otd-year">${year}</span>
+            <span class="otd-band">${band}</span><br>
+            <span class="otd-at">at </span><span class="otd-venue">${venue}</span>
+          </div>`;
+        }).join('');
+
+        const remaining = data.total_gigs - picks.length;
+        document.getElementById('otdTotal').innerHTML =
+          remaining > 0 ? `&hellip;and ${remaining.toLocaleString()} more gigs on this date` : '';
+
+        document.getElementById('onthisdate').style.display = '';
+      })
+      .catch(() => {}); // silent fail — section stays hidden
+  })();
 
   // Run once on load
   onScroll();

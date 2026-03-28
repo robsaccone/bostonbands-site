@@ -5,3 +5,4 @@ Desktop.ini
 # Editor
 .vs/
 *.swp
+pgloader.load

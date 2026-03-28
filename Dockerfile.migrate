@@ -1,0 +1,6 @@
+FROM python:3.12-slim
+RUN apt-get update && apt-get install -y freetds-dev gcc && rm -rf /var/lib/apt/lists/*
+RUN pip install pymssql psycopg2-binary
+WORKDIR /app
+COPY migrate.py .
+CMD ["python", "migrate.py"]

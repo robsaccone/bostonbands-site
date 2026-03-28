@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venue Leaderboard — BostonBands Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #050505;
+  --surface-1: #0a0a0a;
+  --surface-2: #111111;
+  --surface-3: #1a1a1a;
+  --surface-4: #222222;
+  --text-dim: #777777;
+  --text-muted: #999999;
+  --text-body: #c0c0c0;
+  --text-bright: #e8e8e8;
+  --white: #f5f5f0;
+  --amber: #d4a03a;
+  --amber-glow: #e8b84a;
+  --amber-dim: #8a6a2a;
+  --font-display: 'Archivo Black', sans-serif;
+  --font-condensed: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--text-body);
+  background: var(--black);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--amber); text-decoration: none; }
+a:hover { color: var(--amber-glow); }
+
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  background: rgba(5,5,5,0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--surface-3);
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--white);
+}
+.page-title span { color: var(--amber); }
+.page-back {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.page-back:hover { color: var(--amber); }
+
+.page-intro {
+  max-width: 800px;
+  margin: 2.5rem auto 1.5rem;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+.page-intro h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+.page-intro p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.table-wrapper {
+  max-width: 900px;
+  margin: 0 auto 4rem;
+  padding: 0 1rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead {
+  position: sticky;
+  top: 52px;
+  z-index: 10;
+}
+th {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 0.75rem 0.75rem;
+  text-align: left;
+  background: var(--black);
+  border-bottom: 1px solid var(--surface-4);
+}
+th.num { text-align: right; }
+td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--surface-3);
+  vertical-align: top;
+}
+td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+tr:hover td {
+  background: var(--surface-2);
+}
+.rank {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  color: var(--text-dim);
+  width: 2.5rem;
+}
+.venue-name {
+  font-weight: 400;
+  color: var(--text-bright);
+}
+.venue-city {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.venue-gigs {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  color: var(--amber);
+  font-size: 1rem;
+}
+tr.top-venue td {
+  border-bottom-color: var(--amber-dim);
+}
+tr.top-venue .venue-name {
+  color: var(--amber-glow);
+}
+tr.top-venue .rank {
+  color: var(--amber);
+}
+
+@media (max-width: 600px) {
+  th, td { padding: 0.5rem 0.4rem; font-size: 0.8rem; }
+  .venue-gigs { font-size: 0.9rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-title">Venue <span>Leaderboard</span></div>
+  <a href="../index.html#explore" class="page-back">&larr; Back</a>
+</header>
+
+<div class="page-intro">
+  <h2>Where the Music Happened</h2>
+  <p>The stages, the dives, the rooms that made the scene. Ranked by how many nights they kept the lights on.</p>
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Venue</th>
+        <th class="num">Gigs</th>
+        <th class="num">Bands</th>
+        <th class="num">Years</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody"></tbody>
+  </table>
+</div>
+
+<script>
+fetch('../data/venue-leaderboard.json')
+  .then(r => r.json())
+  .then(venues => {
+    const tbody = document.getElementById('leaderboardBody');
+    venues.forEach((v, i) => {
+      const rank = i + 1;
+      const isTop = rank <= 3;
+      const firstYear = v.first_gig ? v.first_gig.slice(0, 4) : '?';
+      const lastYear = v.last_gig ? v.last_gig.slice(0, 4) : '?';
+      const years = firstYear === lastYear ? firstYear : `${firstYear}&ndash;${lastYear}`;
+      const city = [v.city, v.state].filter(Boolean).join(', ');
+
+      const tr = document.createElement('tr');
+      if (isTop) tr.className = 'top-venue';
+      tr.innerHTML = `
+        <td class="rank">${rank}</td>
+        <td>
+          <div class="venue-name">${v.venuename}</div>
+          <div class="venue-city">${city}</div>
+        </td>
+        <td class="num venue-gigs">${v.gig_count.toLocaleString()}</td>
+        <td class="num">${v.band_count.toLocaleString()}</td>
+        <td class="num">${years}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+</script>
+</body>
+</html>
