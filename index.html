@@ -334,6 +334,77 @@ body::before {
 }
 
 /* ============================================
+   ON THIS DATE
+   ============================================ */
+.on-this-date-section {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+.otd-gigs {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.otd-gig {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.otd-gig .otd-year {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.otd-gig .otd-band {
+  color: var(--text-bright);
+  font-weight: 400;
+}
+.otd-gig .otd-venue {
+  color: var(--amber);
+}
+.otd-total {
+  margin-top: 1.5rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ============================================
+   EXPLORE THE ARCHIVE
+   ============================================ */
+.explore-section {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+.explore-links {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+.explore-links a {
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+.explore-links a:hover {
+  color: var(--amber-glow);
+}
+.explore-dot {
+  color: var(--surface-4);
+  margin: 0 0.75rem;
+}
+
+/* ============================================
    NAVIGATION
    ============================================ */
 nav {
@@ -1063,6 +1134,7 @@ footer {
     <li><a href="#highlights">Highlights</a></li>
     <li><a href="#music">Music</a></li>
     <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#explore">Explore</a></li>
     <li><a href="#thankyou">Thank You</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -1200,6 +1272,17 @@ footer {
         <div class="number-label">Gigs</div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ========== ON THIS DATE ========== -->
+<section class="section on-this-date-section" id="onthisdate" style="display:none;">
+  <div class="reveal">
+    <div class="section-label">On This Date</div>
+    <h2 class="section-heading"><span class="line" id="otdHeading"></span></h2>
+    <hr class="section-divider">
+    <div class="otd-gigs" id="otdGigs"></div>
+    <div class="otd-total" id="otdTotal"></div>
   </div>
 </section>
 
@@ -1504,6 +1587,20 @@ footer {
   </div>
 </section>
 
+<!-- ========== EXPLORE ========== -->
+<section class="section explore-section" id="explore">
+  <div class="reveal" style="text-align:center;">
+    <div class="section-label">Explore the Archive</div>
+    <p class="explore-links">
+      <a href="explore/venues.html">Venue Map</a>
+      <span class="explore-dot">&middot;</span>
+      <a href="explore/leaderboard.html">Leaderboard</a>
+      <span class="explore-dot">&middot;</span>
+      <a href="explore/connections.html">Connections</a>
+    </p>
+  </div>
+</section>
+
 <!-- ========== CLOSING ========== -->
 <section class="closing" id="thankyou">
   <div class="reveal">
@@ -1691,6 +1788,60 @@ footer {
       navLinks.classList.remove('open');
     });
   });
+
+  // ── On This Date ──
+  (function loadOnThisDate() {
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const monthNames = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+
+    fetch(`data/on-this-date/${mm}-${dd}.json`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        if (!data.gigs || data.gigs.length === 0) return;
+
+        // Pick up to 5 interesting gigs — prefer ones with gigname, diverse years
+        const named = data.gigs.filter(g => g.gigname && g.gigname.trim());
+        const pool = named.length >= 5 ? named : data.gigs;
+        const seen = new Set();
+        const picks = [];
+        // Shuffle
+        const shuffled = [...pool].sort(() => Math.random() - 0.5);
+        for (const g of shuffled) {
+          const year = g.date.slice(0, 4);
+          if (!seen.has(year + g.venue)) {
+            seen.add(year + g.venue);
+            picks.push(g);
+            if (picks.length >= 5) break;
+          }
+        }
+        picks.sort((a, b) => a.date.localeCompare(b.date));
+
+        // Render
+        const heading = document.getElementById('otdHeading');
+        heading.textContent = `${monthNames[now.getMonth()]} ${now.getDate()} in Boston Music`;
+
+        const container = document.getElementById('otdGigs');
+        container.innerHTML = picks.map(g => {
+          const year = g.date.slice(0, 4);
+          const band = g.band || 'Unknown';
+          const venue = g.venue || 'Unknown venue';
+          const city = g.city ? `, ${g.city}` : '';
+          return `<div class="otd-gig">
+            <span class="otd-year">${year}</span>
+            <span class="otd-band">${band}</span> at <span class="otd-venue">${venue}</span>${city}
+          </div>`;
+        }).join('');
+
+        document.getElementById('otdTotal').textContent =
+          `${data.total_gigs} gigs on this date across the years`;
+
+        document.getElementById('onthisdate').style.display = '';
+      })
+      .catch(() => {}); // silent fail — section stays hidden
+  })();
 
   // Run once on load
   onScroll();
