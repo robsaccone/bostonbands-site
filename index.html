@@ -398,9 +398,65 @@ nav.scrolled {
 .nav-links a:hover { color: var(--white); }
 .nav-links a:hover::after { width: 100%; }
 
+/* Hamburger button */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 101;
+}
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text-muted);
+  margin: 5px 0;
+  transition: transform 0.3s var(--ease-out-expo), opacity 0.3s;
+}
+.nav-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 6px);
+  background: var(--amber);
+}
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -6px);
+  background: var(--amber);
+}
+
 @media (max-width: 640px) {
   nav { padding: 1rem 1.25rem; }
-  .nav-links { gap: 1.25rem; font-size: 0.75rem; }
+  .nav-toggle { display: block; }
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 100vh;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(10,10,10,0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-left: 1px solid var(--surface-3);
+    padding: 5rem 2rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+  .nav-links.open {
+    transform: translateX(0);
+  }
+  .nav-links li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--surface-3);
+  }
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+  .nav-links a::after { display: none; }
 }
 
 /* ============================================
@@ -1002,12 +1058,16 @@ footer {
 <!-- ========== NAVIGATION ========== -->
 <nav id="navbar">
   <a href="#hero" class="nav-logo"><img src="bb_site_logo_white.png" alt="BostonBands" class="nav-logo-img"></a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="#story">Story</a></li>
     <li><a href="#highlights">Highlights</a></li>
     <li><a href="#music">Music</a></li>
     <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#thankyou">Thank You</a></li>
   </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- ========== HERO ========== -->
@@ -1445,13 +1505,13 @@ footer {
 </section>
 
 <!-- ========== CLOSING ========== -->
-<section class="closing">
+<section class="closing" id="thankyou">
   <div class="reveal">
     <div class="section-label">Thank You</div>
     <h2 class="section-heading"><span class="line">Keep It</span><span class="line">Local</span></h2>
     <hr class="section-divider" style="margin-left:auto; margin-right:auto;">
     <p class="closing-text">
-      To every musician who uploaded a demo, every venue that booked a local act, and every fan who showed up&mdash;
+      To every musician who put themselves out there, every venue that booked an unknown, and every fan who showed up and stayed&mdash;
       <br><br><strong>This was yours, and it always will be.</strong>
     </p>
   </div>
@@ -1614,6 +1674,21 @@ footer {
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    });
+  });
+
+  // ── Mobile nav toggle ──
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('active');
+    navLinks.classList.toggle('open');
+  });
+  // Close menu when a link is tapped
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navToggle.classList.remove('active');
+      navLinks.classList.remove('open');
     });
   });
 
