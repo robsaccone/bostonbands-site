@@ -411,26 +411,58 @@ body::before {
    ============================================ */
 .explore-section {
   padding-top: 2rem;
-  padding-bottom: 3rem;
+  padding-bottom: 4rem;
 }
-.explore-links {
-  font-family: var(--font-condensed);
-  font-weight: 600;
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-top: 0.5rem;
-}
-.explore-links a {
+.explore-intro {
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
   color: var(--text-muted);
-  transition: color 0.3s;
+  font-size: 0.95rem;
 }
-.explore-links a:hover {
-  color: var(--amber-glow);
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
-.explore-dot {
-  color: var(--surface-4);
-  margin: 0 0.75rem;
+.explore-card {
+  display: block;
+  padding: 1.5rem 1.25rem;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-3);
+  border-radius: 4px;
+  text-align: left;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+}
+.explore-card:hover {
+  border-color: var(--amber-dim);
+  background: var(--surface-3);
+  transform: translateY(-2px);
+  color: inherit;
+}
+.explore-card-name {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.explore-card-desc {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.explore-card:hover .explore-card-desc {
+  color: var(--text-body);
+}
+@media (max-width: 600px) {
+  .explore-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
 }
 
 /* ============================================
@@ -1496,13 +1528,23 @@ footer {
 <section class="section explore-section" id="explore">
   <div class="reveal" style="text-align:center;">
     <div class="section-label">Explore the Archive</div>
-    <p class="explore-links">
-      <a href="explore/venues.html">Venue Map</a>
-      <span class="explore-dot">&middot;</span>
-      <a href="explore/leaderboard.html">Leaderboard</a>
-      <span class="explore-dot">&middot;</span>
-      <a href="explore/connections.html">The Universe</a>
-    </p>
+    <h2 class="section-heading"><span class="line">Go Deeper</span></h2>
+    <hr class="section-divider" style="margin-left:auto; margin-right:auto;">
+    <p class="explore-intro">Thirty years of data, mapped and visualized. See where the music happened, who played the most, and how it all connected.</p>
+    <div class="explore-grid">
+      <a href="explore/venues.html" class="explore-card reveal">
+        <div class="explore-card-name">Venue Map</div>
+        <div class="explore-card-desc">Every stage in Greater Boston, on a map. Zoom into your neighborhood.</div>
+      </a>
+      <a href="explore/leaderboard.html" class="explore-card reveal reveal-delay-1">
+        <div class="explore-card-name">Leaderboard</div>
+        <div class="explore-card-desc">Which venues hosted the most shows? The rankings may surprise you.</div>
+      </a>
+      <a href="explore/connections.html" class="explore-card reveal reveal-delay-2">
+        <div class="explore-card-name">The Universe</div>
+        <div class="explore-card-desc">The web of bands and venues that made Boston's music scene one big family.</div>
+      </a>
+    </div>
   </div>
 </section>
 
