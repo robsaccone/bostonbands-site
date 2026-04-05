@@ -79,66 +79,33 @@ a:hover { color: var(--amber-glow); }
 }
 .page-back:hover { color: var(--amber); }
 
-/* === YEAR INDICATOR === */
-.year-indicator {
+/* === NAV ARROWS (carousel-style, left/right edges) === */
+.nav-arrow {
   position: fixed;
-  top: 0.85rem;
-  right: 6rem;
-  z-index: 1001;
-  font-family: var(--font-condensed);
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--amber);
-  letter-spacing: 0.05em;
-  transition: opacity 0.3s;
-}
-
-/* === NAV CONTROLS === */
-.nav-controls {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.nav-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid var(--surface-4);
-  background: rgba(10,10,10,0.85);
+  background: rgba(10,10,10,0.7);
   backdrop-filter: blur(8px);
   color: var(--text-dim);
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
 }
-.nav-btn:hover {
+.nav-arrow:hover {
   border-color: var(--amber-dim);
   color: var(--amber);
+  background: rgba(10,10,10,0.9);
 }
-.nav-era-dots {
-  display: flex;
-  gap: 6px;
-  padding: 0 0.5rem;
-}
-.nav-era-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--surface-4);
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-  padding: 0;
-}
-.nav-era-dot:hover { background: var(--amber-dim); }
-.nav-era-dot.active { background: var(--amber); }
+.nav-arrow--left { left: 1rem; }
+.nav-arrow--right { right: 1rem; }
 
 /* === SCROLL CONTAINER === */
 .scroll-container {
@@ -338,8 +305,9 @@ a:hover { color: var(--amber-glow); }
   .era-card { width: 260px; }
   .era-card-summary { font-size: 0.75rem; }
   .scene-card { width: 180px; }
-  .year-indicator { right: 1rem; }
-  .nav-controls { bottom: 1rem; right: 1rem; }
+  .nav-arrow { width: 36px; height: 36px; font-size: 1rem; }
+  .nav-arrow--left { left: 0.5rem; }
+  .nav-arrow--right { right: 0.5rem; }
 }
 </style>
 </head>
@@ -349,8 +317,6 @@ a:hover { color: var(--amber-glow); }
   <div class="page-title">The <span>Timeline</span></div>
   <a href="../index.html#explore" class="page-back">&larr; Back</a>
 </header>
-
-<div class="year-indicator" id="yearIndicator">1996</div>
 
 <div class="scroll-container" id="scrollContainer">
   <div class="timeline-canvas" id="timelineCanvas">
@@ -367,11 +333,8 @@ a:hover { color: var(--amber-glow); }
   <p>Each bar is one month of gigs. Scroll to explore 30 years of Boston music.</p>
 </div>
 
-<nav class="nav-controls" id="navControls">
-  <button class="nav-btn" id="navPrev" title="Previous era">&larr;</button>
-  <div class="nav-era-dots" id="navDots"></div>
-  <button class="nav-btn" id="navNext" title="Next era">&rarr;</button>
-</nav>
+<button class="nav-arrow nav-arrow--left" id="navPrev" title="Previous era">&larr;</button>
+<button class="nav-arrow nav-arrow--right" id="navNext" title="Next era">&rarr;</button>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
@@ -654,69 +617,32 @@ a:hover { color: var(--amber-glow); }
   eraSpans.forEach(span => observer.observe(span));
   sceneEls.forEach(card => observer.observe(card));
 
-  // --- Year indicator ---
-  const yearIndicator = document.getElementById('yearIndicator');
-  function updateYearIndicator() {
-    const scrollLeft = container.scrollLeft;
-    const centerX = scrollLeft + container.clientWidth / 2;
-    const idx = Math.round(xScale.invert(centerX));
-    const clampedIdx = Math.max(0, Math.min(idx, allMonths.length - 1));
-    yearIndicator.textContent = allMonths[clampedIdx].year;
-    updateActiveDot(allMonths[clampedIdx].year);
-  }
-  container.addEventListener('scroll', updateYearIndicator);
-
-  // --- Navigation controls ---
-  const navDots = document.getElementById('navDots');
-  const dotElements = [];
-
-  erasData.forEach((era, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'nav-era-dot';
-    dot.title = `${era.year} — ${era.title}`;
-    dot.addEventListener('click', () => scrollToEra(i));
-    navDots.appendChild(dot);
-    dotElements.push(dot);
-  });
-
+  // --- Navigation (carousel-style prev/next) ---
   function scrollToEra(index) {
     const era = erasData[index];
     const idx = monthIndex(era.year, 1);
-    const targetX = xScale(idx) - container.clientWidth * 0.15; // position era ~15% from left
+    const targetX = xScale(idx) - container.clientWidth * 0.15;
     container.scrollTo({ left: Math.max(0, targetX), behavior: 'smooth' });
   }
 
-  function updateActiveDot(currentYear) {
-    let activeIdx = 0;
+  function getCurrentEraIndex() {
+    const centerX = container.scrollLeft + container.clientWidth / 2;
+    const monthIdx = Math.round(xScale.invert(centerX));
+    const currentYear = allMonths[Math.max(0, Math.min(monthIdx, allMonths.length - 1))].year;
+    let eraIdx = 0;
     for (let i = erasData.length - 1; i >= 0; i--) {
-      if (currentYear >= erasData[i].year) { activeIdx = i; break; }
+      if (currentYear >= erasData[i].year) { eraIdx = i; break; }
     }
-    dotElements.forEach((dot, i) => {
-      dot.classList.toggle('active', i === activeIdx);
-    });
+    return eraIdx;
   }
 
   document.getElementById('navPrev').addEventListener('click', () => {
-    // Find current era and go to previous
-    const currentYear = parseInt(yearIndicator.textContent);
-    let idx = 0;
-    for (let i = erasData.length - 1; i >= 0; i--) {
-      if (currentYear >= erasData[i].year) { idx = i; break; }
-    }
-    scrollToEra(Math.max(0, idx - 1));
+    scrollToEra(Math.max(0, getCurrentEraIndex() - 1));
   });
 
   document.getElementById('navNext').addEventListener('click', () => {
-    const currentYear = parseInt(yearIndicator.textContent);
-    let idx = 0;
-    for (let i = erasData.length - 1; i >= 0; i--) {
-      if (currentYear >= erasData[i].year) { idx = i; break; }
-    }
-    scrollToEra(Math.min(erasData.length - 1, idx + 1));
+    scrollToEra(Math.min(erasData.length - 1, getCurrentEraIndex() + 1));
   });
-
-  // Initialize first dot as active
-  updateActiveDot(1996);
 
   // --- Mouse wheel → horizontal scroll ---
   container.addEventListener('wheel', (e) => {
