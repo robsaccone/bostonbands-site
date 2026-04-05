@@ -134,6 +134,40 @@ a:hover { color: var(--amber-glow); }
   left: 0;
 }
 
+/* === MOOD GRADIENT (behind skyline) === */
+.mood-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* === ERA TRANSITION MARKERS === */
+.era-crack {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  pointer-events: none;
+}
+.era-crack::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 5%, var(--amber-dim) 30%, var(--amber) 50%, var(--amber-dim) 70%, transparent 95%);
+  opacity: 0.4;
+}
+.era-crack::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  right: -8px;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(212,160,58,0.15) 0%, transparent 70%);
+}
+
 /* === ERA SPANS (top banner) === */
 .era-span {
   position: absolute;
@@ -214,7 +248,7 @@ a:hover { color: var(--amber-glow); }
   color: var(--text-body);
 }
 
-/* === SCENE CARDS (interstitial images) === */
+/* === SCENE CARDS (interstitial images, parallax layer) === */
 .scene-card {
   position: absolute;
   width: 240px;
@@ -224,9 +258,10 @@ a:hover { color: var(--amber-glow); }
   transform: translateY(20px);
   transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
   border: 1px solid var(--surface-4);
+  will-change: transform;
 }
 .scene-card.visible {
-  opacity: 1;
+  opacity: 0.75;
   transform: translateY(0);
 }
 .scene-card img {
@@ -413,6 +448,66 @@ a:hover { color: var(--amber-glow); }
     canvas.appendChild(span);
   });
 
+  // --- Mood gradient canvas (behind skyline) ---
+  const moodCanvas = document.createElement('canvas');
+  moodCanvas.className = 'mood-gradient';
+  moodCanvas.width = canvasW;
+  moodCanvas.height = viewportH;
+  moodCanvas.style.width = canvasW + 'px';
+  moodCanvas.style.height = viewportH + 'px';
+  canvas.insertBefore(moodCanvas, canvas.firstChild);
+
+  // Define era mood colors (bottom glow color per era)
+  const eraMoods = [
+    { year: 1996, color: [212, 160, 58] },   // warm amber — heyday
+    { year: 2000, color: [180, 140, 60] },    // fading amber — transition
+    { year: 2006, color: [100, 130, 170] },   // cooling blue — unraveling
+    { year: 2009, color: [60, 80, 140] },     // deep blue — death of radio
+    { year: 2013, color: [140, 100, 50] },    // muted amber — last one standing
+    { year: 2017, color: [220, 175, 60] },    // bright gold — archive opens
+    { year: 2020, color: [80, 30, 30] },      // dark red — the silence
+    { year: 2022, color: [160, 140, 60] },    // returning amber — rebuilding
+    { year: 2026, color: [212, 160, 58] }     // amber — the archive
+  ];
+
+  function getMoodColor(monthIdx) {
+    const year = 1996 + Math.floor(monthIdx / 12);
+    let from = eraMoods[0], to = eraMoods[0];
+    for (let i = 0; i < eraMoods.length - 1; i++) {
+      if (year >= eraMoods[i].year && year < eraMoods[i + 1].year) {
+        from = eraMoods[i]; to = eraMoods[i + 1];
+        break;
+      }
+      if (i === eraMoods.length - 2) { from = eraMoods[i + 1]; to = eraMoods[i + 1]; }
+    }
+    const t = Math.min(1, (year - from.year) / Math.max(1, to.year - from.year));
+    return from.color.map((c, j) => Math.round(c + (to.color[j] - c) * t));
+  }
+
+  // Paint mood gradient
+  const moodCtx = moodCanvas.getContext('2d');
+  for (let i = 0; i < allMonths.length; i++) {
+    const x = xScale(i);
+    const rgb = getMoodColor(i);
+    const intensity = Math.min(0.12, 0.03 + (allMonths[i].gigs / maxGigs) * 0.09);
+    const grad = moodCtx.createLinearGradient(0, viewportH, 0, viewportH * 0.4);
+    grad.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${intensity})`);
+    grad.addColorStop(1, 'transparent');
+    moodCtx.fillStyle = grad;
+    moodCtx.fillRect(x, 0, BAR_WIDTH + BAR_GAP, viewportH);
+  }
+
+  // --- Era transition crack markers ---
+  erasData.forEach((era, i) => {
+    if (i === 0) return; // no crack before the first era
+    const idx = monthIndex(era.year, 1);
+    const xPos = xScale(idx);
+    const crack = document.createElement('div');
+    crack.className = 'era-crack';
+    crack.style.left = xPos + 'px';
+    canvas.appendChild(crack);
+  });
+
   // --- Create SVG ---
   const svg = d3.select('#timelineCanvas').append('svg')
     .attr('class', 'skyline-svg')
@@ -457,21 +552,40 @@ a:hover { color: var(--amber-glow); }
   glowFilter.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
   glowFilter.append('feComposite').attr('in', 'SourceGraphic').attr('in2', 'blur').attr('operator', 'over');
 
-  // --- Render bars ---
+  // --- Render bars (start flat, animate up on scroll) ---
   const bars = svg.selectAll('.bar')
     .data(allMonths)
     .enter()
     .append('rect')
     .attr('class', 'bar')
     .attr('x', (d, i) => xScale(i))
-    .attr('y', d => skylineH - 20 - Math.max(yScale(d.gigs), 1))
+    .attr('y', skylineH - 20) // start at baseline
     .attr('width', BAR_WIDTH)
-    .attr('height', d => Math.max(yScale(d.gigs), 1))
+    .attr('height', 1) // start as 1px stub
     .attr('rx', 1)
     .attr('fill', d => barStyle(d.gigs).color)
     .attr('opacity', d => barStyle(d.gigs).opacity)
     .attr('filter', d => d.gigs > 700 ? 'url(#barGlow)' : null)
     .style('cursor', 'pointer');
+
+  // Animate bars into view as they enter the viewport
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const rect = d3.select(entry.target);
+        const d = rect.datum();
+        const targetH = Math.max(yScale(d.gigs), 1);
+        rect.transition()
+          .duration(600)
+          .ease(d3.easeCubicOut)
+          .attr('y', skylineH - 20 - targetH)
+          .attr('height', targetH);
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { root: container, rootMargin: '0px 100px 0px 0px', threshold: 0 });
+
+  bars.each(function() { barObserver.observe(this); });
 
   // --- Tooltip ---
   const tooltip = document.getElementById('tooltip');
@@ -486,11 +600,27 @@ a:hover { color: var(--amber-glow); }
     tooltip.style.top = (rect.top - 45) + 'px';
     tooltip.classList.add('visible');
     d3.select(this).attr('opacity', 1).attr('fill', '#e8b84a');
+
+    // Pulse: brighten nearby bars
+    const hoveredIndex = allMonths.indexOf(d);
+    bars.each(function(bd, bi) {
+      const dist = Math.abs(bi - hoveredIndex);
+      if (dist > 0 && dist <= 4) {
+        const boost = 1 - (dist / 5);
+        const baseOpacity = barStyle(bd.gigs).opacity;
+        d3.select(this)
+          .attr('opacity', Math.min(1, baseOpacity + boost * 0.3))
+          .attr('fill', '#e8b84a');
+      }
+    });
   })
   .on('mouseleave', function(event, d) {
     tooltip.classList.remove('visible');
-    const style = barStyle(d.gigs);
-    d3.select(this).attr('opacity', style.opacity).attr('fill', style.color);
+    // Reset all bars
+    bars.each(function(bd) {
+      const style = barStyle(bd.gigs);
+      d3.select(this).attr('opacity', style.opacity).attr('fill', style.color);
+    });
   });
 
   // --- Mobile tap support ---
@@ -642,6 +772,24 @@ a:hover { color: var(--amber-glow); }
 
   document.getElementById('navNext').addEventListener('click', () => {
     scrollToEra(Math.min(erasData.length - 1, getCurrentEraIndex() + 1));
+  });
+
+  // --- Parallax: scene cards drift slower than scroll ---
+  const sceneCardEls = document.querySelectorAll('.scene-card');
+  const sceneOriginalLefts = [];
+  sceneCardEls.forEach(el => {
+    sceneOriginalLefts.push(parseFloat(el.style.left));
+  });
+
+  container.addEventListener('scroll', () => {
+    const scrollLeft = container.scrollLeft;
+    sceneCardEls.forEach((el, i) => {
+      // Scene cards move at 85% of scroll speed (15% parallax offset)
+      const offset = scrollLeft * 0.15;
+      el.style.transform = el.classList.contains('visible')
+        ? `translateX(${offset}px)`
+        : `translateX(${offset}px) translateY(20px)`;
+    });
   });
 
   // --- Mouse wheel → horizontal scroll ---
