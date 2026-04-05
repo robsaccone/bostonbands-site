@@ -232,28 +232,49 @@ a:hover { color: var(--amber-glow); }
   text-transform: uppercase;
 }
 .era-card-body {
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1rem;
 }
 .era-card-year {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: var(--amber);
   line-height: 1;
-  margin-bottom: 0.15rem;
-}
-.era-card-title {
-  font-family: var(--font-condensed);
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 .era-card-summary {
   font-size: 0.8rem;
   line-height: 1.6;
   color: var(--text-body);
+}
+
+/* === SCENE CARDS (interstitial images) === */
+.scene-card {
+  position: absolute;
+  width: 240px;
+  border-radius: 6px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+  border: 1px solid var(--surface-4);
+}
+.scene-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.scene-card img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+}
+.scene-card-caption {
+  background: rgba(10,10,10,0.9);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-condensed);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
 }
 
 /* === TOOLTIP === */
@@ -316,6 +337,7 @@ a:hover { color: var(--amber-glow); }
   .explainer-card { display: none; }
   .era-card { width: 260px; }
   .era-card-summary { font-size: 0.75rem; }
+  .scene-card { width: 180px; }
   .year-indicator { right: 1rem; }
   .nav-controls { bottom: 1rem; right: 1rem; }
 }
@@ -527,7 +549,6 @@ a:hover { color: var(--amber-glow); }
   }, { passive: false });
 
   // --- Era cards (compact, image-driven) ---
-  // Image map: era year → image path (use existing images where available)
   const eraImages = {
     1996: '../images/timeline/era-1996.png',
     2000: '../images/timeline/era-2001.png',
@@ -536,13 +557,14 @@ a:hover { color: var(--amber-glow); }
     2013: '../images/timeline/era-2013.png',
     2017: '../images/timeline/era-2016.png',
     2020: '../images/gallery/crowd-blue.jpg',
-    2022: '../images/venues/sinclair.jpg'
+    2022: '../images/venues/sinclair.jpg',
+    2026: null // archive — use placeholder with logo
   };
 
   erasData.forEach((era, i) => {
     const idx = monthIndex(era.year, 1);
-    const xPos = xScale(idx) + 20; // offset slightly right of era start
-    const topPos = ERA_SPAN_H + 16; // below era span banner
+    const xPos = xScale(idx) + 20;
+    const topPos = ERA_SPAN_H + 16;
 
     const card = document.createElement('div');
     card.className = 'era-card';
@@ -550,11 +572,22 @@ a:hover { color: var(--amber-glow); }
     card.style.top = topPos + 'px';
 
     const imgSrc = eraImages[era.year] || era.image;
-    const imageHtml = imgSrc
-      ? `<img class="era-card-image" src="${imgSrc}" alt="${era.title}" loading="lazy">`
-      : `<div class="era-card-image-placeholder"><span>Image coming soon</span></div>`;
+    let imageHtml;
+    if (era.year === 2026) {
+      // Special archive card with logo
+      imageHtml = `<div class="era-card-image-placeholder" style="background:var(--surface-1);">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--white);text-transform:uppercase;line-height:0.9;">Boston<span style="color:var(--amber);">Bands</span></div>
+          <div style="font-family:var(--font-condensed);font-weight:600;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.3em;color:var(--text-dim);margin-top:0.5rem;">The Archive</div>
+        </div>
+      </div>`;
+    } else if (imgSrc) {
+      imageHtml = `<img class="era-card-image" src="${imgSrc}" alt="${era.title}" loading="lazy">`;
+    } else {
+      imageHtml = `<div class="era-card-image-placeholder"><span>Image coming soon</span></div>`;
+    }
 
-    // Truncate summary to ~120 chars for compact cards
+    // Truncate summary for compact cards
     const shortSummary = era.summary.length > 140
       ? era.summary.substring(0, era.summary.lastIndexOf(' ', 140)) + '...'
       : era.summary;
@@ -563,7 +596,6 @@ a:hover { color: var(--amber-glow); }
       ${imageHtml}
       <div class="era-card-body">
         <div class="era-card-year">${era.year}</div>
-        <div class="era-card-title">${era.title}</div>
         <div class="era-card-summary">${shortSummary}</div>
       </div>
     `;
@@ -571,9 +603,43 @@ a:hover { color: var(--amber-glow); }
     canvas.appendChild(card);
   });
 
-  // --- Scroll-triggered reveals (era spans + era cards) ---
+  // --- Scene cards (interstitial images to fill gaps) ---
+  const sceneCards = [
+    { year: 1998, month: 6, src: '../images/venues/middle-east-up.jpg', caption: 'The Middle East, Central Square', top: '45%' },
+    { year: 2002, month: 6, src: '../images/venues/paradise.jpg', caption: 'Paradise Rock Club', top: '50%' },
+    { year: 2004, month: 6, src: '../images/gallery/guitar-closeup.jpg', caption: 'The scene, up close', top: '38%' },
+    { year: 2007, month: 6, src: '../images/venues/club-passim.jpg', caption: 'Club Passim — open since 1958', top: '48%' },
+    { year: 2011, month: 1, src: '../images/venues/great-scott.jpg', caption: 'Great Scott, Allston (1975–2020)', top: '42%' },
+    { year: 2014, month: 6, src: '../images/gallery/crowd.jpg', caption: 'Boston Calling, City Hall Plaza', top: '48%' },
+    { year: 2015, month: 6, src: '../images/venues/midway.jpg', caption: 'The Midway Café, Jamaica Plain', top: '38%' },
+    { year: 2018, month: 6, src: '../images/gallery/radio-honey-live.jpg', caption: 'Radio Honey, live', top: '45%' },
+    { year: 2019, month: 3, src: '../images/gallery/stu-lee-live.jpg', caption: 'Stu Lee, live', top: '38%' },
+    { year: 2021, month: 6, src: '../images/gallery/silhouette-guitars.jpg', caption: 'Waiting for the music to return', top: '48%' },
+    { year: 2023, month: 6, src: '../images/venues/sinclair.jpg', caption: 'The Sinclair, Cambridge', top: '42%' },
+    { year: 2025, month: 1, src: '../images/gallery/parcek.jpg', caption: 'Peter Parcek', top: '48%' }
+  ];
+
+  sceneCards.forEach(sc => {
+    const idx = monthIndex(sc.year, sc.month);
+    const xPos = xScale(idx);
+
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.style.left = xPos + 'px';
+    card.style.top = sc.top;
+
+    card.innerHTML = `
+      <img src="${sc.src}" alt="${sc.caption}" loading="lazy">
+      <div class="scene-card-caption">${sc.caption}</div>
+    `;
+
+    canvas.appendChild(card);
+  });
+
+  // --- Scroll-triggered reveals (era spans + era cards + scene cards) ---
   const eraCards = document.querySelectorAll('.era-card');
   const eraSpans = document.querySelectorAll('.era-span');
+  const sceneEls = document.querySelectorAll('.scene-card');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -586,6 +652,7 @@ a:hover { color: var(--amber-glow); }
   });
   eraCards.forEach(card => observer.observe(card));
   eraSpans.forEach(span => observer.observe(span));
+  sceneEls.forEach(card => observer.observe(card));
 
   // --- Year indicator ---
   const yearIndicator = document.getElementById('yearIndicator');
