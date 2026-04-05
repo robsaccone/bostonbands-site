@@ -1,0 +1,98 @@
+[
+  {
+    "year": 1996,
+    "title": "The Heyday",
+    "summary": "The Rat ruled Kenmore Square, WBCN owned the airwaves, and the Dropkick Murphys formed in a Quincy barbershop basement. The Telecommunications Act of 1996 began the slow corporate takeover of radio that would eventually gut local music coverage. But for now, the scene was electric — Letters to Cleo, Mighty Mighty Bosstones, and Morphine were all in their prime.",
+    "events": [
+      "Dropkick Murphys form in Quincy, MA",
+      "The Rat in its final years as punk ground zero",
+      "WBCN and the golden age of Boston rock radio",
+      "Telecom Act triggers nationwide radio consolidation"
+    ],
+    "image": null
+  },
+  {
+    "year": 2000,
+    "title": "The Transition",
+    "summary": "The Rat closed in '97. Mark Sandman died onstage in '99. The old guard was fading, but something new was taking root — DIY house shows filled the gaps left by shrinking venues, the Dresden Dolls invented 'Brechtian punk cabaret' in a Boston loft, and Great Scott started its transformation into an every-night live music room in Allston.",
+    "events": [
+      "The Rat closes after 23 years (1997)",
+      "Mark Sandman's death onstage (July 1999)",
+      "Dresden Dolls form — Amanda Palmer's rise begins",
+      "DIY house show culture takes root"
+    ],
+    "image": null
+  },
+  {
+    "year": 2006,
+    "title": "The Unraveling Begins",
+    "summary": "Dropkick Murphys' 'I'm Shipping Up to Boston' exploded via Scorsese's The Departed and became the sound of Boston sports. But beneath the surface, the infrastructure was crumbling. WFNX got a signal boost in 2006, buying time, while Passion Pit formed at Emerson College — proof the scene still had creative fire even as the ground shifted.",
+    "events": [
+      "'Shipping Up to Boston' goes national via The Departed",
+      "Passion Pit forms at Emerson College (2007)",
+      "WFNX signal boost — last stand of indie radio",
+      "The Abbey closes in Inman Square (2008)"
+    ],
+    "image": null
+  },
+  {
+    "year": 2009,
+    "title": "The Death of Radio",
+    "summary": "WBCN signed off on August 11, 2009, after 41 years — its last song was Pink Floyd's 'Shine On You Crazy Diamond.' Three years later, WFNX was sold to Clear Channel for $14.5 million, its last song The Cure's 'Let's Go to Bed.' Billy Ruane — the man who helped build the Middle East into a music venue and championed everyone from Nirvana to local unknowns — died in October 2010. The connective tissue was tearing.",
+    "events": [
+      "WBCN dies after 41 years (August 2009)",
+      "Billy Ruane dies — irreplaceable scene catalyst (2010)",
+      "WFNX sold to Clear Channel for $14.5M (May 2012)",
+      "RadioBDC launches as digital successor"
+    ],
+    "image": null
+  },
+  {
+    "year": 2013,
+    "title": "Last One Standing",
+    "summary": "The Boston Phoenix published its final issue in March 2013 — 47 years of music listings, band coverage, and local culture, gone. The Rat was gone. WBCN was gone. WFNX was gone. The Phoenix was gone. BostonBands was the last one standing. Then, on April 15, the Marathon bombing shook the city. Six weeks later, Boston Calling launched at City Hall Plaza — co-founded by former WFNX staffers — and became the first major public gathering post-bombing. A cathartic moment from the ashes.",
+    "events": [
+      "Boston Phoenix publishes final issue (March 2013)",
+      "Boston Marathon bombing (April 15, 2013)",
+      "Boston Calling launches at City Hall Plaza (May 2013)",
+      "BostonBands — the last one standing"
+    ],
+    "image": null
+  },
+  {
+    "year": 2017,
+    "title": "The Archive Opens",
+    "summary": "In late 2016, BostonBands began importing gig data from external sources — SongKick, BandsInTown, TicketWeb — and the archive exploded. Monthly gig counts jumped from dozens to over a thousand. Boston Calling moved to the Harvard Athletic Complex, tripling its footprint. For three years the data painted a portrait of the full Boston music ecosystem: every bar band, every open mic, every sold-out headliner.",
+    "events": [
+      "BostonBands bulk import — data explodes (late 2016)",
+      "Boston Calling moves to Harvard Athletic Complex (2017)",
+      "Peak data years: 900–1,200 gigs per month",
+      "Dropkick Murphys' 11 Short Stories debuts at #8"
+    ],
+    "image": null
+  },
+  {
+    "year": 2020,
+    "title": "The Silence",
+    "summary": "COVID-19 shut down live music in March 2020 and devastated Boston's already-fragile small venue ecosystem. Great Scott — 44 years in Allston, the room where countless bands got their start — closed permanently. McGreevy's shuttered. Boston Calling was canceled. The silence was deafening, and for many venues and musicians, it was permanent.",
+    "events": [
+      "COVID-19 shuts down all live music (March 2020)",
+      "Great Scott closes permanently after 44 years",
+      "McGreevy's closes (August 2020)",
+      "Boston Calling canceled — won't return until 2022"
+    ],
+    "image": null
+  },
+  {
+    "year": 2022,
+    "title": "Rebuilding",
+    "summary": "On March 15, 2022, Roadrunner opened in Brighton — 3,500 capacity, the largest indoor GA venue in New England, named after Jonathan Richman's 'Roadrunner.' Billy Strings played opening night. Two months later, Boston Calling returned with a stage devoted exclusively to local talent. MGM Music Hall opened at Fenway. The scene wasn't what it was — but it was alive, and building something new.",
+    "events": [
+      "Roadrunner opens — named for Jonathan Richman (March 2022)",
+      "Boston Calling returns with local music stage (May 2022)",
+      "MGM Music Hall at Fenway opens (2022)",
+      "Noah Kahan rises from the New England scene"
+    ],
+    "image": null
+  }
+]
