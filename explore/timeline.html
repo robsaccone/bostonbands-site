@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Timeline — BostonBands Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #050505;
+  --surface-1: #0a0a0a;
+  --surface-2: #111111;
+  --surface-3: #1a1a1a;
+  --surface-4: #222222;
+  --text-dim: #777777;
+  --text-muted: #999999;
+  --text-body: #c0c0c0;
+  --text-bright: #e8e8e8;
+  --white: #f5f5f0;
+  --amber: #d4a03a;
+  --amber-glow: #e8b84a;
+  --amber-dim: #8a6a2a;
+  --font-display: 'Archivo Black', sans-serif;
+  --font-condensed: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--text-body);
+  background: var(--black);
+  overflow: hidden;
+  height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a { color: var(--amber); text-decoration: none; }
+a:hover { color: var(--amber-glow); }
+
+/* === HEADER === */
+.page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 1.5rem;
+  background: rgba(5,5,5,0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--surface-3);
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--white);
+}
+.page-title span { color: var(--amber); }
+.page-back {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.page-back:hover { color: var(--amber); }
+
+/* === YEAR INDICATOR === */
+.year-indicator {
+  position: fixed;
+  top: 0.85rem;
+  right: 6rem;
+  z-index: 1001;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+  transition: opacity 0.3s;
+}
+
+/* === SCROLL CONTAINER === */
+.scroll-container {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-color: var(--surface-4) var(--black);
+}
+.scroll-container::-webkit-scrollbar { height: 6px; }
+.scroll-container::-webkit-scrollbar-track { background: var(--black); }
+.scroll-container::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+
+.timeline-canvas {
+  position: relative;
+  height: 100%;
+}
+
+/* === SKYLINE SVG === */
+.skyline-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* === ERA CARDS === */
+.era-card {
+  position: absolute;
+  max-width: 400px;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--surface-4);
+  border-radius: 6px;
+  padding: 1.5rem 1.75rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+.era-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.era-card-year {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.era-card-title {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+.era-card-summary {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-body);
+  margin-bottom: 0.75rem;
+}
+.era-card-events {
+  list-style: none;
+  padding: 0;
+}
+.era-card-events li {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  padding-left: 0.75rem;
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+.era-card-events li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  background: var(--amber-dim);
+  border-radius: 50%;
+}
+
+/* === TOOLTIP === */
+.bar-tooltip {
+  position: fixed;
+  z-index: 2000;
+  background: var(--surface-3);
+  border: 1px solid var(--amber-dim);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.bar-tooltip.visible { opacity: 1; }
+.bar-tooltip-date {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  color: var(--white);
+  font-size: 0.85rem;
+}
+.bar-tooltip-stats {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  color: var(--amber);
+  font-size: 0.8rem;
+}
+
+/* === EXPLAINER CARD === */
+.explainer-card {
+  position: fixed;
+  bottom: 3rem;
+  left: 1.5rem;
+  z-index: 1000;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--surface-4);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  max-width: 280px;
+}
+.explainer-title {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.explainer-card p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.explainer-hint {
+  font-family: var(--font-condensed);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+/* === SCROLL HINT === */
+.scroll-hint {
+  position: fixed;
+  bottom: 3rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: opacity 0.5s var(--ease-out-expo);
+}
+.scroll-hint-arrow {
+  animation: scrollPulse 2s infinite;
+  font-size: 1.2rem;
+  color: var(--amber-dim);
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(6px); opacity: 1; }
+}
+
+/* === MOBILE === */
+@media (max-width: 768px) {
+  .explainer-card { display: none; }
+  .era-card {
+    max-width: 300px;
+    padding: 1.25rem;
+  }
+  .era-card-summary { font-size: 0.85rem; }
+  .year-indicator { right: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-title">The <span>Timeline</span></div>
+  <a href="../index.html#explore" class="page-back">&larr; Back</a>
+</header>
+
+<div class="year-indicator" id="yearIndicator">1996</div>
+
+<div class="scroll-container" id="scrollContainer">
+  <div class="timeline-canvas" id="timelineCanvas">
+  </div>
+</div>
+
+<div class="bar-tooltip" id="tooltip">
+  <div class="bar-tooltip-date"></div>
+  <div class="bar-tooltip-stats"></div>
+</div>
+
+<div class="explainer-card">
+  <div class="explainer-title">The Timeline</div>
+  <p>30 years of Boston's music scene. Each bar is one month of gigs. The taller the bar, the more music was happening.</p>
+  <div class="explainer-hint">Scroll to explore &middot; Hover for details</div>
+</div>
+
+<div class="scroll-hint" id="scrollHint">
+  Scroll to explore <span class="scroll-hint-arrow">&rarr;</span>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+(async function() {
+  // --- Config ---
+  const BAR_WIDTH = 18;
+  const BAR_GAP = 2;
+  const SKYLINE_RATIO = 0.30;
+  const PADDING_LEFT = 60;
+  const PADDING_RIGHT = 60;
+
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // --- Load data ---
+  const [timelineData, erasData] = await Promise.all([
+    d3.json('../data/timeline-extended.json'),
+    d3.json('../data/eras.json')
+  ]);
+
+  // --- Build full month array (1996-01 through 2026-12) ---
+  const dataMap = new Map();
+  timelineData.forEach(d => dataMap.set(`${d.year}-${d.month}`, d));
+
+  const allMonths = [];
+  for (let y = 1996; y <= 2026; y++) {
+    for (let m = 1; m <= 12; m++) {
+      const key = `${y}-${m}`;
+      allMonths.push(dataMap.get(key) || { year: y, month: m, gigs: 0, bands: 0, venues: 0 });
+    }
+  }
+
+  // --- Dimensions ---
+  const container = document.getElementById('scrollContainer');
+  const viewportH = container.clientHeight;
+  const skylineH = Math.round(viewportH * SKYLINE_RATIO);
+  const canvasW = PADDING_LEFT + allMonths.length * (BAR_WIDTH + BAR_GAP) + PADDING_RIGHT;
+
+  const canvas = document.getElementById('timelineCanvas');
+  canvas.style.width = canvasW + 'px';
+
+  // --- Scales ---
+  const xScale = d3.scaleLinear()
+    .domain([0, allMonths.length - 1])
+    .range([PADDING_LEFT, canvasW - PADDING_RIGHT]);
+
+  const maxGigs = d3.max(allMonths, d => d.gigs);
+  const yScale = d3.scaleSqrt()
+    .domain([0, maxGigs])
+    .range([0, skylineH - 30]);
+
+  // --- Create SVG ---
+  const svg = d3.select('#timelineCanvas').append('svg')
+    .attr('class', 'skyline-svg')
+    .attr('width', canvasW)
+    .attr('height', skylineH);
+
+  // --- Year separator lines & labels ---
+  allMonths.forEach((d, i) => {
+    if (d.month === 1) {
+      const x = xScale(i);
+      svg.append('line')
+        .attr('x1', x).attr('y1', 0)
+        .attr('x2', x).attr('y2', skylineH - 20)
+        .attr('stroke', '#222')
+        .attr('stroke-width', 0.5);
+      svg.append('text')
+        .attr('x', x + (BAR_WIDTH + BAR_GAP) * 6)
+        .attr('y', skylineH - 6)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#555')
+        .attr('font-family', 'Barlow Condensed, sans-serif')
+        .attr('font-size', '10px')
+        .text(d.year);
+    }
+  });
+
+  // --- Bar color/opacity helper ---
+  function barStyle(gigs) {
+    if (gigs === 0) return { color: '#8a6a2a', opacity: 0.3 };
+    if (gigs <= 20) return { color: '#8a6a2a', opacity: 0.4 };
+    if (gigs <= 100) return { color: '#d4a03a', opacity: 0.55 };
+    if (gigs <= 300) return { color: '#d4a03a', opacity: 0.65 };
+    if (gigs <= 700) return { color: '#e8b84a', opacity: 0.8 };
+    return { color: '#e8b84a', opacity: 0.9 };
+  }
+
+  // --- SVG filter for glow ---
+  const defs = svg.append('defs');
+  const glowFilter = defs.append('filter').attr('id', 'barGlow');
+  glowFilter.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
+  glowFilter.append('feComposite').attr('in', 'SourceGraphic').attr('in2', 'blur').attr('operator', 'over');
+
+  // --- Render bars ---
+  const bars = svg.selectAll('.bar')
+    .data(allMonths)
+    .enter()
+    .append('rect')
+    .attr('class', 'bar')
+    .attr('x', (d, i) => xScale(i))
+    .attr('y', d => skylineH - 20 - Math.max(yScale(d.gigs), 1))
+    .attr('width', BAR_WIDTH)
+    .attr('height', d => Math.max(yScale(d.gigs), 1))
+    .attr('rx', 1)
+    .attr('fill', d => barStyle(d.gigs).color)
+    .attr('opacity', d => barStyle(d.gigs).opacity)
+    .attr('filter', d => d.gigs > 700 ? 'url(#barGlow)' : null)
+    .style('cursor', 'pointer');
+
+  // --- Tooltip ---
+  const tooltip = document.getElementById('tooltip');
+  const tooltipDate = tooltip.querySelector('.bar-tooltip-date');
+  const tooltipStats = tooltip.querySelector('.bar-tooltip-stats');
+
+  bars.on('mouseenter', function(event, d) {
+    const rect = this.getBoundingClientRect();
+    tooltipDate.textContent = `${MONTH_NAMES[d.month - 1]} ${d.year}`;
+    tooltipStats.textContent = `${d.gigs.toLocaleString()} gigs \u00B7 ${d.bands.toLocaleString()} bands \u00B7 ${d.venues.toLocaleString()} venues`;
+    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+    tooltip.style.top = (rect.top - 45) + 'px';
+    tooltip.classList.add('visible');
+
+    d3.select(this).attr('opacity', 1).attr('fill', '#e8b84a');
+  })
+  .on('mouseleave', function(event, d) {
+    tooltip.classList.remove('visible');
+    const style = barStyle(d.gigs);
+    d3.select(this).attr('opacity', style.opacity).attr('fill', style.color);
+  });
+
+  // --- Mobile tap support ---
+  let lastTapped = null;
+  bars.on('touchstart', function(event, d) {
+    event.preventDefault();
+    if (lastTapped === this) {
+      tooltip.classList.remove('visible');
+      lastTapped = null;
+      return;
+    }
+    lastTapped = this;
+    const rect = this.getBoundingClientRect();
+    tooltipDate.textContent = `${MONTH_NAMES[d.month - 1]} ${d.year}`;
+    tooltipStats.textContent = `${d.gigs.toLocaleString()} gigs \u00B7 ${d.bands.toLocaleString()} bands \u00B7 ${d.venues.toLocaleString()} venues`;
+    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+    tooltip.style.top = (rect.top - 45) + 'px';
+    tooltip.classList.add('visible');
+  }, { passive: false });
+
+  // --- Era cards ---
+  function monthIndex(year, month) {
+    return (year - 1996) * 12 + (month - 1);
+  }
+
+  erasData.forEach((era, i) => {
+    const idx = monthIndex(era.year, 1);
+    const xPos = xScale(idx);
+    const topPercent = (i % 2 === 0) ? 8 : 28;
+
+    const card = document.createElement('div');
+    card.className = 'era-card';
+    card.style.left = xPos + 'px';
+    card.style.top = topPercent + '%';
+
+    card.innerHTML = `
+      <div class="era-card-year">${era.year}</div>
+      <div class="era-card-title">${era.title}</div>
+      <div class="era-card-summary">${era.summary}</div>
+      <ul class="era-card-events">
+        ${era.events.map(e => `<li>${e}</li>`).join('')}
+      </ul>
+    `;
+
+    canvas.appendChild(card);
+  });
+
+  // --- Scroll-triggered era card reveals ---
+  const eraCards = document.querySelectorAll('.era-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    root: container,
+    threshold: 0.1
+  });
+  eraCards.forEach(card => observer.observe(card));
+
+  // --- Year indicator ---
+  const yearIndicator = document.getElementById('yearIndicator');
+  container.addEventListener('scroll', () => {
+    const scrollLeft = container.scrollLeft;
+    const centerX = scrollLeft + container.clientWidth / 2;
+    const idx = Math.round(xScale.invert(centerX));
+    const clampedIdx = Math.max(0, Math.min(idx, allMonths.length - 1));
+    yearIndicator.textContent = allMonths[clampedIdx].year;
+  });
+
+  // --- Scroll hint: fade on first scroll ---
+  const scrollHint = document.getElementById('scrollHint');
+  let hintDismissed = false;
+  container.addEventListener('scroll', () => {
+    if (!hintDismissed && container.scrollLeft > 50) {
+      scrollHint.style.opacity = '0';
+      hintDismissed = true;
+    }
+  });
+
+  // --- Mouse wheel → horizontal scroll ---
+  container.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      container.scrollLeft += e.deltaY;
+    }
+  }, { passive: false });
+
+})();
+</script>
+</body>
+</html>
