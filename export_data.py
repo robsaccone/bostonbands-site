@@ -201,6 +201,22 @@ def export_timeline(cur):
     write_json("timeline.json", [dict(r) for r in cur.fetchall()])
 
 
+def export_timeline_extended(cur):
+    """Export monthly gig counts for full-range timeline (1996-2026)."""
+    print("\n=== Timeline Extended ===")
+    cur.execute(f"""
+        SELECT EXTRACT(YEAR FROM g.gigdate)::int as year,
+               EXTRACT(MONTH FROM g.gigdate)::int as month,
+               COUNT(*) as gigs,
+               COUNT(DISTINCT g.bandid) as bands,
+               COUNT(DISTINCT g.venueid) as venues
+        FROM gigs g
+        WHERE {GIG_FILTER} AND g.gigdate >= '1996-01-01' AND g.gigdate < '2027-01-01'
+        GROUP BY year, month ORDER BY year, month
+    """)
+    write_json("timeline-extended.json", [dict(r) for r in cur.fetchall()])
+
+
 def export_band_cards(cur):
     """Export band stats cards for notable bands."""
     print("\n=== Band Cards ===")
@@ -299,6 +315,7 @@ def main():
     export_venue_map(cur)
     export_venue_network(cur)
     export_timeline(cur)
+    export_timeline_extended(cur)
     export_band_cards(cur)
     export_genre_index(cur)
     export_busiest_nights(cur)
