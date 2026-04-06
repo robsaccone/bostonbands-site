@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(PGPASSWORD=newpassword psql:*)"
+      "Bash(PGPASSWORD=newpassword psql:*)",
+      "Bash(\"D:\\\\myrepos\\\\bostonbands\\\\.venv\\\\Scripts\\\\python.exe\" -u \"D:\\\\myrepos\\\\bostonbands\\\\export_data.py\" 2>&1)",
+      "Bash(bash:*)",
+      "Bash(.venv/Scripts/python -c \"import json; d=json.load\\(open\\('data/timeline-extended.json'\\)\\); print\\(f'{len\\(d\\)} months, {d[0][\\\\\"year\\\\\"]}-{d[-1][\\\\\"year\\\\\"]}'\\)\")",
+      "WebSearch"
     ]
   }
 }
