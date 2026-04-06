@@ -170,7 +170,7 @@ def export_venue_network(cur):
         WHERE (g1.isdeleted = false OR g1.isdeleted IS NULL)
           AND (g2.isdeleted = false OR g2.isdeleted IS NULL)
         GROUP BY v1.venuename, v2.venuename
-        HAVING COUNT(DISTINCT g1.bandid) >= 10
+        HAVING COUNT(DISTINCT g1.bandid) >= 5
         ORDER BY shared_bands DESC
     """)
     nodes = set()
