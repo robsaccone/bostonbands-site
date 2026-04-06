@@ -179,8 +179,26 @@ def export_venue_network(cur):
         nodes.add(row["source"])
         nodes.add(row["target"])
         links.append(dict(row))
+
+    # Venues confirmed closed (manually researched)
+    closed_venues = {
+        "Atwood's Tavern": 2023,
+        "Great Scott": 2020,
+        "Hajjar's": 2018,
+        "Hard Rock Cafe": 2022,
+        "Once Lounge & Musichall": 2020,
+        "ONCE Somerville": 2020,
+        "Presidents Rock Club": 2014,
+        "Slapshotz Sports Pub": 2020,
+        "SPOTLIGHT TAVERN": 2017,
+        "The Grand Canal": 2016,
+        "The New World Tavern": 2025,
+        "Thunder Road": 2020,
+        "Wonder Bar": 2020,
+    }
+
     write_json("venue-network.json", {
-        "nodes": [{"id": n} for n in sorted(nodes)],
+        "nodes": [{"id": n, "closed": closed_venues.get(n)} for n in sorted(nodes)],
         "links": links,
     })
 
