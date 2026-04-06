@@ -164,7 +164,7 @@ svg { display: block; }
 <div class="explainer-card" id="explainer">
   <div class="explainer-title">The Universe</div>
   <p>If two venues booked the same bands, they're connected here. The bigger the circle, the more it connects to. No surprise who's at the center.</p>
-  <div class="explainer-hint">Hover to explore &middot; Drag to rearrange &middot; <span style="color:#6b2020;">Faded = closed</span></div>
+  <div class="explainer-hint">Hover to explore &middot; Drag to rearrange &middot; <span style="color:#cc6666;">Faded = closed</span></div>
 </div>
 
 <div id="tooltip"></div>
@@ -296,7 +296,7 @@ svg { display: block; }
           return src === d.id || tgt === d.id;
         }).length;
 
-        const closedLabel = d.closed ? `<div class="tt-stat" style="color:#6b2020;">Closed ${d.closed}</div>` : '';
+        const closedLabel = d.closed ? `<div class="tt-stat" style="color:#cc6666;">Closed ${d.closed}</div>` : '';
         tooltip.innerHTML = `
           <div class="tt-name">${d.id}</div>
           <div class="tt-stat">${connections} connected venues</div>
