@@ -644,15 +644,15 @@ a:hover { color: var(--amber-glow); }
 
   // --- Era cards (compact, image-driven) ---
   const eraImages = {
-    1996: '../images/timeline/era-1996.png',
-    2000: '../images/timeline/era-2001.png',
-    2006: '../images/timeline/era-2008.png',
-    2009: '../images/gallery/silhouette-guitars.jpg',
-    2013: '../images/timeline/era-2013.png',
-    2017: '../images/timeline/era-2016.png',
+    1996: '../images/website/1996.png',
+    2000: '../images/website/2001.png',
+    2006: '../images/website/2008.png',
+    2009: '../images/website/2012.png',
+    2013: '../images/website/2013.png',
+    2017: '../images/website/2016.png',
     2020: '../images/gallery/crowd-blue.jpg',
     2022: '../images/venues/sinclair.jpg',
-    2026: null // archive — use placeholder with logo
+    2026: '../images/website/2026.png'
   };
 
   erasData.forEach((era, i) => {
@@ -666,20 +666,9 @@ a:hover { color: var(--amber-glow); }
     card.style.top = topPos + 'px';
 
     const imgSrc = eraImages[era.year] || era.image;
-    let imageHtml;
-    if (era.year === 2026) {
-      // Special archive card with logo
-      imageHtml = `<div class="era-card-image-placeholder" style="background:var(--surface-1);">
-        <div style="text-align:center;">
-          <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--white);text-transform:uppercase;line-height:0.9;">Boston<span style="color:var(--amber);">Bands</span></div>
-          <div style="font-family:var(--font-condensed);font-weight:600;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.3em;color:var(--text-dim);margin-top:0.5rem;">The Archive</div>
-        </div>
-      </div>`;
-    } else if (imgSrc) {
-      imageHtml = `<img class="era-card-image" src="${imgSrc}" alt="${era.title}" loading="lazy">`;
-    } else {
-      imageHtml = `<div class="era-card-image-placeholder"><span>Image coming soon</span></div>`;
-    }
+    const imageHtml = imgSrc
+      ? `<img class="era-card-image" src="${imgSrc}" alt="${era.title}" loading="lazy">`
+      : `<div class="era-card-image-placeholder"><span>Image coming soon</span></div>`;
 
     // Truncate summary for compact cards
     const shortSummary = era.summary.length > 140
