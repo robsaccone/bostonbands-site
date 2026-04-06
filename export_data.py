@@ -158,7 +158,7 @@ def export_venue_network(cur):
             SELECT venueid, venuename FROM venues v
             WHERE {VENUE_FILTER} AND venueid IN (
                 SELECT venueid FROM gigs g WHERE {GIG_FILTER}
-                GROUP BY venueid ORDER BY COUNT(*) DESC LIMIT 30
+                GROUP BY venueid ORDER BY COUNT(*) DESC LIMIT 100
             )
         )
         SELECT v1.venuename as source, v2.venuename as target,
