@@ -192,21 +192,21 @@ svg { display: block; }
       });
       const maxDegree = Math.max(...Object.values(degree));
 
+      function nodeRadius(d) {
+        const deg = degree[d.id] || 1;
+        return Math.max(6, Math.min(40, 6 + (deg / maxDegree) * 34));
+      }
+
       const simulation = d3.forceSimulation(data.nodes)
         .force('link', d3.forceLink(data.links)
           .id(d => d.id)
-          .distance(d => 300 - Math.min(d.shared_bands * 0.3, 150))
+          .distance(d => 120 - Math.min(d.shared_bands * 0.15, 80))
         )
-        .force('charge', d3.forceManyBody().strength(-1200))
+        .force('charge', d3.forceManyBody().strength(-400))
         .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('collision', d3.forceCollide().radius(d => nodeRadius(d) + 15))
-        .force('x', d3.forceX(width / 2).strength(0.03))
-        .force('y', d3.forceY(height / 2).strength(0.03));
-
-      function nodeRadius(d) {
-        const deg = degree[d.id] || 1;
-        return Math.max(10, Math.min(50, 10 + (deg / maxDegree) * 40));
-      }
+        .force('collision', d3.forceCollide().radius(d => nodeRadius(d) + 8))
+        .force('x', d3.forceX(width / 2).strength(0.08))
+        .force('y', d3.forceY(height / 2).strength(0.08));
 
       // Links
       const link = svg.append('g')
