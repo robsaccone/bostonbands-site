@@ -1164,6 +1164,36 @@ nav.scrolled {
   color: var(--text-bright);
   font-weight: 400;
 }
+.donate-btn {
+  display: inline-block;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  background: rgba(212,160,58,0.15);
+  border: 1px solid var(--amber);
+  padding: 0.65rem 1.75rem;
+  border-radius: 2px;
+  transition: background 0.3s, transform 0.3s var(--ease-out-expo);
+}
+.donate-btn:hover {
+  background: rgba(212,160,58,0.3);
+  transform: translateY(-1px);
+}
+.nav-links .donate-btn {
+  padding: 0.35rem 1rem;
+  font-size: 0.8rem;
+  margin-left: 0.25rem;
+}
+.nav-links .donate-btn:hover { color: var(--white); }
+@media (max-width: 640px) {
+  .nav-links .donate-btn {
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
+}
 
 /* ============================================
    FOOTER
@@ -1220,6 +1250,7 @@ footer {
     <li><a href="#archive">Archive</a></li>
     <li><a href="#explore">Explore</a></li>
     <li><a href="#thankyou">Thank You</a></li>
+    <li><a href="https://donate.stripe.com/8x28wH2YY44Ndowgtv7wA00" target="_blank" rel="noopener" class="donate-btn">Donate</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -1525,6 +1556,7 @@ footer {
       To every musician who put themselves out there, every venue that booked an unknown, and every fan who showed up and stayed&mdash;
       <br><br><strong>This was yours, and it always will be.</strong>
     </p>
+    <a href="https://donate.stripe.com/8x28wH2YY44Ndowgtv7wA00" target="_blank" rel="noopener" class="donate-btn">Support the Archive</a>
   </div>
 </section>
 
