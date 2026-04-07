@@ -28,6 +28,7 @@
   --font-handwritten: 'Dancing Script', cursive;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
+html { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: var(--font-body);
@@ -293,12 +294,94 @@ a:hover { color: var(--amber-glow); }
 /* === MOBILE === */
 @media (max-width: 768px) {
   .explainer-card { display: none; }
-  .polaroid--era { width: 220px; padding: 8px 8px 44px 8px; }
-  .polaroid--scene { width: 160px; padding: 6px 6px 28px 6px; }
-  .polaroid-caption { font-size: 0.7rem; }
-  .nav-arrow { width: 36px; height: 36px; font-size: 1rem; }
-  .nav-arrow--left { left: 0.5rem; }
-  .nav-arrow--right { right: 0.5rem; }
+  .nav-arrow { display: none; }
+  .scroll-container { display: none; }
+
+  body {
+    overflow: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* --- Vertical timeline --- */
+  .mobile-timeline {
+    padding: 68px 1.25rem 3rem;
+  }
+  .mobile-era {
+    margin-bottom: 3rem;
+  }
+  .mobile-era-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .mobile-era-year {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+  .mobile-era-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--amber-dim), transparent);
+  }
+  .mobile-era-card {
+    background: #f0ece4;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    margin-bottom: 1rem;
+  }
+  .mobile-era-card img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+  }
+  .mobile-era-card-body {
+    padding: 1rem 1.25rem 1.25rem;
+  }
+  .mobile-era-card-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: #222;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .mobile-era-card-summary {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #444;
+  }
+  .mobile-scenes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .mobile-scene {
+    background: #f0ece4;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .mobile-scene img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
+  .mobile-scene-caption {
+    padding: 0.4rem 0.5rem;
+    font-family: var(--font-handwritten);
+    font-size: 0.8rem;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+  }
 }
 </style>
 </head>
@@ -332,6 +415,7 @@ a:hover { color: var(--amber-glow); }
   const PADDING_LEFT = 60;
   const PADDING_RIGHT = 60;
   const ERA_SPAN_H = 32;
+  const IS_MOBILE = window.innerWidth <= 768;
 
   const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -340,6 +424,122 @@ a:hover { color: var(--amber-glow); }
     d3.json('../data/timeline-extended.json'),
     d3.json('../data/eras.json')
   ]);
+
+  // --- Era images (shared) ---
+  const eraImages = {
+    1996: '../images/website/1996.png',
+    2000: '../images/website/2001.png',
+    2006: '../images/website/2008.png',
+    2009: '../images/website/2012.png',
+    2013: '../images/website/2013.png',
+    2017: '../images/website/2016.png',
+    2020: '../images/gallery/crowd-blue.jpg',
+    2022: '../images/venues/sinclair.jpg',
+    2026: '../images/website/2026.png'
+  };
+
+  // --- Scene cards (shared) ---
+  const sceneCards = [
+    { year: 1996, month: 9, src: '../images/downloaded/The-Rathskeller.webp', caption: 'The Rat, Kenmore Square', top: '48%', rot: 3 },
+    { year: 1998, month: 3, src: '../images/downloaded/the-middle-east.jpg', caption: 'The Middle East, Central Square', top: '40%', rot: -1.5 },
+    { year: 1999, month: 6, src: '../images/gallery/guitar-closeup.jpg', caption: 'The scene, up close', top: '52%', rot: 2 },
+    { year: 2001, month: 3, src: '../images/venues/paradise.jpg', caption: 'Paradise Rock Club', top: '50%', rot: -2 },
+    { year: 2002, month: 9, src: '../images/bands/joe-mack.jpg', caption: 'Joe Mack', top: '42%', rot: 2.5 },
+    { year: 2003, month: 6, src: '../images/venues/club-passim.jpg', caption: 'Club Passim', top: '48%', rot: -3 },
+    { year: 2004, month: 9, src: '../images/venues/middle-east-up.jpg', caption: 'Middle East Upstairs', top: '38%', rot: 1.5 },
+    { year: 2005, month: 3, src: '../images/gallery/gearon.jpg', caption: 'Gearon', top: '52%', rot: 1 },
+    { year: 2006, month: 9, src: '../images/gallery/silhouette-guitars.jpg', caption: 'Last call', top: '48%', rot: -2 },
+    { year: 2007, month: 6, src: '../images/bands/fil-pacino.jpg', caption: 'Fil Pacino', top: '40%', rot: 2 },
+    { year: 2008, month: 6, src: '../images/downloaded/phoenix.jpeg', caption: 'The Boston Phoenix', top: '52%', rot: -1 },
+    { year: 2009, month: 6, src: '../images/downloaded/1041-wbcn.jpg', caption: 'WBCN 104.1 — gone', top: '48%', rot: -2.5 },
+    { year: 2010, month: 6, src: '../images/downloaded/great-scott.webp', caption: 'Great Scott, Allston', top: '38%', rot: 2 },
+    { year: 2011, month: 3, src: '../images/bands/the-617.jpg', caption: 'The 617', top: '50%', rot: -1.5 },
+    { year: 2012, month: 3, src: '../images/gallery/fil-pacino-art.jpg', caption: 'Fil Pacino', top: '42%', rot: 3 },
+    { year: 2013, month: 6, src: '../images/downloaded/the-boston-phoenix.jpg', caption: 'RIP Boston Phoenix, 1966-2013', top: '48%', rot: -1.5 },
+    { year: 2014, month: 3, src: '../images/bands/radio-honey.jpg', caption: 'Radio Honey', top: '42%', rot: 2 },
+    { year: 2014, month: 10, src: '../images/gallery/crowd.jpg', caption: 'Boston Calling', top: '52%', rot: -2.5 },
+    { year: 2015, month: 6, src: '../images/venues/midway.jpg', caption: 'The Midway Café', top: '38%', rot: 1.5 },
+    { year: 2016, month: 3, src: '../images/bands/stu-lee.jpg', caption: 'Stu Lee', top: '50%', rot: -1 },
+    { year: 2017, month: 6, src: '../images/downloaded/boston-calling.webp', caption: 'Boston Calling', top: '48%', rot: -2 },
+    { year: 2018, month: 3, src: '../images/gallery/radio-honey-live.jpg', caption: 'Radio Honey, live', top: '38%', rot: 1.5 },
+    { year: 2018, month: 10, src: '../images/gallery/stu-lee-live.jpg', caption: 'Stu Lee, live', top: '52%', rot: -3 },
+    { year: 2019, month: 3, src: '../images/bands/peter-parcek.jpg', caption: 'Peter Parcek', top: '42%', rot: 2 },
+    { year: 2020, month: 6, src: '../images/downloaded/great-scott.jpg', caption: 'Great Scott — closed forever', top: '48%', rot: -2 },
+    { year: 2020, month: 10, src: '../images/gallery/crowd-blue.jpg', caption: 'Remember when...', top: '38%', rot: 1.5 },
+    { year: 2021, month: 6, src: '../images/gallery/silhouette-guitars.jpg', caption: 'Waiting...', top: '50%', rot: -3 },
+    { year: 2022, month: 6, src: '../images/downloaded/roadrunner-venue.jpg', caption: 'Roadrunner — the new hope', top: '42%', rot: 2 },
+    { year: 2023, month: 3, src: '../images/venues/sinclair.jpg', caption: 'The Sinclair', top: '50%', rot: -1.5 },
+    { year: 2023, month: 10, src: '../images/gallery/parcek.jpg', caption: 'Peter Parcek', top: '38%', rot: 2.5 },
+    { year: 2024, month: 6, src: '../images/gallery/featured-artist.png', caption: 'Featured artist', top: '50%', rot: -2 },
+    { year: 2025, month: 3, src: '../images/venues/great-scott.jpg', caption: 'Gone but not forgotten', top: '42%', rot: 1.5 }
+  ];
+
+  // --- Era end years ---
+  const eraEndYears = [];
+  for (let i = 0; i < erasData.length; i++) {
+    eraEndYears.push(i < erasData.length - 1 ? erasData[i + 1].year : 2026);
+  }
+
+  // =============================================
+  // MOBILE: Vertical scrolling timeline
+  // =============================================
+  if (IS_MOBILE) {
+    const mobileTimeline = document.createElement('div');
+    mobileTimeline.className = 'mobile-timeline';
+
+    erasData.forEach((era, i) => {
+      const eraEnd = eraEndYears[i];
+      const section = document.createElement('div');
+      section.className = 'mobile-era';
+
+      // Era divider with year
+      const divider = document.createElement('div');
+      divider.className = 'mobile-era-divider';
+      divider.innerHTML = `
+        <span class="mobile-era-year">${era.year}</span>
+        <span class="mobile-era-line"></span>
+      `;
+      section.appendChild(divider);
+
+      // Era card with image and summary
+      const imgSrc = eraImages[era.year];
+      const card = document.createElement('div');
+      card.className = 'mobile-era-card';
+      card.innerHTML = `
+        ${imgSrc ? `<img src="${imgSrc}" alt="${era.title}" loading="lazy">` : ''}
+        <div class="mobile-era-card-body">
+          <div class="mobile-era-card-title">${era.title}</div>
+          <div class="mobile-era-card-summary">${era.summary}</div>
+        </div>
+      `;
+      section.appendChild(card);
+
+      // Scene photos for this era
+      const eraScenes = sceneCards.filter(sc => sc.year >= era.year && sc.year < eraEnd);
+      if (eraScenes.length > 0) {
+        const grid = document.createElement('div');
+        grid.className = 'mobile-scenes';
+        eraScenes.forEach(sc => {
+          grid.innerHTML += `
+            <div class="mobile-scene">
+              <img src="${sc.src}" alt="${sc.caption}" loading="lazy">
+              <div class="mobile-scene-caption">${sc.caption}</div>
+            </div>
+          `;
+        });
+        section.appendChild(grid);
+      }
+
+      mobileTimeline.appendChild(section);
+    });
+
+    document.body.appendChild(mobileTimeline);
+    return; // Skip all desktop rendering
+  }
+
+  // =============================================
+  // DESKTOP: Horizontal scrolling canvas
+  // =============================================
 
   // --- Build full month array (1996-01 through 2026-12) ---
   const dataMap = new Map();
@@ -371,12 +571,6 @@ a:hover { color: var(--amber-glow); }
 
   function monthIndex(year, month) {
     return (year - 1996) * 12 + (month - 1);
-  }
-
-  // --- Era end years ---
-  const eraEndYears = [];
-  for (let i = 0; i < erasData.length; i++) {
-    eraEndYears.push(i < erasData.length - 1 ? erasData[i + 1].year : 2026);
   }
 
   // --- Era span banners ---
@@ -535,18 +729,6 @@ a:hover { color: var(--amber-glow); }
   });
 
   // --- Polaroid cards: eras ---
-  const eraImages = {
-    1996: '../images/website/1996.png',
-    2000: '../images/website/2001.png',
-    2006: '../images/website/2008.png',
-    2009: '../images/website/2012.png',
-    2013: '../images/website/2013.png',
-    2017: '../images/website/2016.png',
-    2020: '../images/gallery/crowd-blue.jpg',
-    2022: '../images/venues/sinclair.jpg',
-    2026: '../images/website/2026.png'
-  };
-
   // Slight rotation per card for natural scatter
   const eraRotations = [-2, 1.5, -1, 2, -1.5, 1, -2.5, 1.5, -1];
 
@@ -583,49 +765,6 @@ a:hover { color: var(--amber-glow); }
   });
 
   // --- Polaroid cards: scenes ---
-  const sceneCards = [
-    // 1996-1999: The Heyday
-    { year: 1996, month: 9, src: '../images/downloaded/The-Rathskeller.webp', caption: 'The Rat, Kenmore Square', top: '48%', rot: 3 },
-    { year: 1998, month: 3, src: '../images/downloaded/the-middle-east.jpg', caption: 'The Middle East, Central Square', top: '40%', rot: -1.5 },
-    { year: 1999, month: 6, src: '../images/gallery/guitar-closeup.jpg', caption: 'The scene, up close', top: '52%', rot: 2 },
-    // 2000-2005: The Transition
-    { year: 2001, month: 3, src: '../images/venues/paradise.jpg', caption: 'Paradise Rock Club', top: '50%', rot: -2 },
-    { year: 2002, month: 9, src: '../images/bands/joe-mack.jpg', caption: 'Joe Mack', top: '42%', rot: 2.5 },
-    { year: 2003, month: 6, src: '../images/venues/club-passim.jpg', caption: 'Club Passim', top: '48%', rot: -3 },
-    { year: 2004, month: 9, src: '../images/venues/middle-east-up.jpg', caption: 'Middle East Upstairs', top: '38%', rot: 1.5 },
-    { year: 2005, month: 3, src: '../images/gallery/gearon.jpg', caption: 'Gearon', top: '52%', rot: 1 },
-    // 2006-2008: The Unraveling
-    { year: 2006, month: 9, src: '../images/gallery/silhouette-guitars.jpg', caption: 'Last call', top: '48%', rot: -2 },
-    { year: 2007, month: 6, src: '../images/bands/fil-pacino.jpg', caption: 'Fil Pacino', top: '40%', rot: 2 },
-    { year: 2008, month: 6, src: '../images/downloaded/phoenix.jpeg', caption: 'The Boston Phoenix', top: '52%', rot: -1 },
-    // 2009-2012: Death of Radio
-    { year: 2009, month: 6, src: '../images/downloaded/1041-wbcn.jpg', caption: 'WBCN 104.1 — gone', top: '48%', rot: -2.5 },
-    { year: 2010, month: 6, src: '../images/downloaded/great-scott.webp', caption: 'Great Scott, Allston', top: '38%', rot: 2 },
-    { year: 2011, month: 3, src: '../images/bands/the-617.jpg', caption: 'The 617', top: '50%', rot: -1.5 },
-    { year: 2012, month: 3, src: '../images/gallery/fil-pacino-art.jpg', caption: 'Fil Pacino', top: '42%', rot: 3 },
-    // 2013-2016: Last One Standing
-    { year: 2013, month: 6, src: '../images/downloaded/the-boston-phoenix.jpg', caption: 'RIP Boston Phoenix, 1966-2013', top: '48%', rot: -1.5 },
-    { year: 2014, month: 3, src: '../images/bands/radio-honey.jpg', caption: 'Radio Honey', top: '42%', rot: 2 },
-    { year: 2014, month: 10, src: '../images/gallery/crowd.jpg', caption: 'Boston Calling', top: '52%', rot: -2.5 },
-    { year: 2015, month: 6, src: '../images/venues/midway.jpg', caption: 'The Midway Café', top: '38%', rot: 1.5 },
-    { year: 2016, month: 3, src: '../images/bands/stu-lee.jpg', caption: 'Stu Lee', top: '50%', rot: -1 },
-    // 2017-2019: The Archive Opens
-    { year: 2017, month: 6, src: '../images/downloaded/boston-calling.webp', caption: 'Boston Calling', top: '48%', rot: -2 },
-    { year: 2018, month: 3, src: '../images/gallery/radio-honey-live.jpg', caption: 'Radio Honey, live', top: '38%', rot: 1.5 },
-    { year: 2018, month: 10, src: '../images/gallery/stu-lee-live.jpg', caption: 'Stu Lee, live', top: '52%', rot: -3 },
-    { year: 2019, month: 3, src: '../images/bands/peter-parcek.jpg', caption: 'Peter Parcek', top: '42%', rot: 2 },
-    // 2020-2021: The Silence
-    { year: 2020, month: 6, src: '../images/downloaded/great-scott.jpg', caption: 'Great Scott — closed forever', top: '48%', rot: -2 },
-    { year: 2020, month: 10, src: '../images/gallery/crowd-blue.jpg', caption: 'Remember when...', top: '38%', rot: 1.5 },
-    { year: 2021, month: 6, src: '../images/gallery/silhouette-guitars.jpg', caption: 'Waiting...', top: '50%', rot: -3 },
-    // 2022-2025: Rebuilding
-    { year: 2022, month: 6, src: '../images/downloaded/roadrunner-venue.jpg', caption: 'Roadrunner — the new hope', top: '42%', rot: 2 },
-    { year: 2023, month: 3, src: '../images/venues/sinclair.jpg', caption: 'The Sinclair', top: '50%', rot: -1.5 },
-    { year: 2023, month: 10, src: '../images/gallery/parcek.jpg', caption: 'Peter Parcek', top: '38%', rot: 2.5 },
-    { year: 2024, month: 6, src: '../images/gallery/featured-artist.png', caption: 'Featured artist', top: '50%', rot: -2 },
-    { year: 2025, month: 3, src: '../images/venues/great-scott.jpg', caption: 'Gone but not forgotten', top: '42%', rot: 1.5 }
-  ];
-
   sceneCards.forEach(sc => {
     const idx = monthIndex(sc.year, sc.month);
     const xPos = xScale(idx);
