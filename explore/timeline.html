@@ -451,7 +451,9 @@ a:hover { color: var(--amber-glow); }
     { year: 1996, month: 9, src: '../images/downloaded/The-Rathskeller.webp', caption: 'The Rat, Kenmore Square', top: '48%', rot: 3 },
     { year: 1998, month: 3, src: '../images/downloaded/the-middle-east.jpg', caption: 'The Middle East, Central Square', top: '40%', rot: -1.5 },
     { year: 1999, month: 1, src: '../images/timeline/alex-rob.jpg', caption: 'Alex & Rob — the early days', top: '42%', rot: -2 },
+    { year: 1997, month: 9, src: '../images/timeline/1999-rob-angry-dan.PNG', caption: 'Rob in Bald Walter', top: '52%', rot: 1.5 },
     { year: 2000, month: 1, src: '../images/venues/paradise.jpg', caption: 'Paradise Rock Club', top: '50%', rot: -2 },
+    { year: 2000, month: 6, src: '../images/timeline/2000-angry-dan-the-aquarium.JPG', caption: 'Angry Dan at The Aquarium', top: '40%', rot: 2.5 },
     { year: 2001, month: 3, src: '../images/timeline/tradeshow5.jpg', caption: 'The booth — CD listening station', top: '50%', rot: 1.5 },
     { year: 2002, month: 1, src: '../images/timeline/tradeshow.jpg', caption: 'BostonBands at the trade show', top: '38%', rot: -2.5 },
     { year: 2002, month: 9, src: '../images/timeline/tradeshow2.jpg', caption: 'Working the booth', top: '48%', rot: 2 },
@@ -470,17 +472,15 @@ a:hover { color: var(--amber-glow); }
     { year: 2014, month: 3, src: '../images/bands/radio-honey.jpg', caption: 'Radio Honey', top: '42%', rot: 2 },
     { year: 2014, month: 10, src: '../images/gallery/crowd.jpg', caption: 'Boston Calling', top: '52%', rot: -2.5 },
     { year: 2015, month: 6, src: '../images/venues/midway.jpg', caption: 'The Midway Café', top: '38%', rot: 1.5 },
-    { year: 2016, month: 3, src: '../images/bands/stu-lee.jpg', caption: 'Stu Lee', top: '50%', rot: -1 },
+    { year: 2016, month: 6, src: '../images/gallery/parcek.jpg', caption: 'Peter Parcek', top: '42%', rot: 2.5 },
     { year: 2017, month: 6, src: '../images/downloaded/boston-calling.webp', caption: 'Boston Calling', top: '48%', rot: -2 },
-    { year: 2018, month: 3, src: '../images/gallery/radio-honey-live.jpg', caption: 'Radio Honey, live', top: '38%', rot: 1.5 },
-    { year: 2018, month: 10, src: '../images/gallery/stu-lee-live.jpg', caption: 'Stu Lee, live', top: '52%', rot: -3 },
-    { year: 2019, month: 3, src: '../images/bands/peter-parcek.jpg', caption: 'Peter Parcek', top: '42%', rot: 2 },
-    { year: 2020, month: 6, src: '../images/downloaded/great-scott.jpg', caption: 'Great Scott — closed forever', top: '48%', rot: -2 },
-    { year: 2020, month: 10, src: '../images/gallery/crowd-blue.jpg', caption: 'Remember when...', top: '38%', rot: 1.5 },
-    { year: 2021, month: 6, src: '../images/gallery/silhouette-guitars.jpg', caption: 'Waiting...', top: '50%', rot: -3 },
+    { year: 2018, month: 6, src: '../images/timeline/rob_guitar3.jpg', caption: 'Rob on guitar', top: '42%', rot: 2 },
+    { year: 2019, month: 6, src: '../images/gallery/radio-honey-live.jpg', caption: 'Radio Honey, live', top: '38%', rot: 1.5 },
+    { year: 2019, month: 9, src: '../images/timeline/2019-rob-solo.JPG', caption: 'Rob, solo acoustic', top: '50%', rot: -1.5, objPos: 'top' },
+    { year: 2020, month: 9, src: '../images/timeline/mike-and-rob..JPG', caption: 'Mike & Rob', top: '40%', rot: 2 },
+    { year: 2021, month: 6, src: '../images/downloaded/great-scott.jpg', caption: 'Great Scott — closed forever', top: '48%', rot: -2 },
     { year: 2022, month: 6, src: '../images/downloaded/roadrunner-venue.jpg', caption: 'Roadrunner — the new hope', top: '42%', rot: 2 },
     { year: 2023, month: 3, src: '../images/venues/sinclair.jpg', caption: 'The Sinclair', top: '50%', rot: -1.5 },
-    { year: 2023, month: 10, src: '../images/gallery/parcek.jpg', caption: 'Peter Parcek', top: '38%', rot: 2.5 },
     { year: 2024, month: 6, src: '../images/gallery/featured-artist.png', caption: 'Featured artist', top: '50%', rot: -2 },
     { year: 2025, month: 3, src: '../images/venues/great-scott.jpg', caption: 'Gone but not forgotten', top: '42%', rot: 1.5 }
   ];
@@ -787,7 +787,7 @@ a:hover { color: var(--amber-glow); }
     card.style.setProperty('--rot', sc.rot + 'deg');
 
     card.innerHTML = `
-      <img src="${sc.src}" alt="${sc.caption}" loading="lazy">
+      <img src="${sc.src}" alt="${sc.caption}" loading="lazy"${sc.objPos ? ` style="object-position:${sc.objPos}"` : ''}>
       <div class="polaroid-caption">${sc.caption}</div>
     `;
 
