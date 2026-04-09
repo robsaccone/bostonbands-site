@@ -6,3 +6,21 @@ Desktop.ini
 .vs/
 *.swp
 pgloader.load
+
+# Docs (private)
+docs/
+
+# Claude Code
+.claude/
+
+# Superpowers
+.superpowers/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Migration/data scripts (contain credentials)
+export_data.py
+migrate.py
